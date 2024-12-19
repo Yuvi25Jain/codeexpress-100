@@ -1,0 +1,124 @@
+Reena and Meena are adventurous rock climbers who love to climb rocky mountains. They start from a specific position on the mountain wall and follow a series of climbing instructions. Reena begins at a point (𝑥,𝑦) on the mountain wall. The instructions are provided in the form of a string s. The string contains the following symbols that dictate the movement:
+
+U - Upwards (North direction)
+D - Downwards (South direction)
+R - Rightwards (East direction)
+L - Leftwards (West direction)
+The integers followed by the above symbols in the string signify the distance (in meters) that Reena and Meena must climb in the respective direction (U, D, R, L).
+
+Your task is to calculate the Euclidean distance from their starting point on the ground (0,0) to their final position on the mountain wall after following the entire set of climbing instructions.
+
+Input Format
+
+The first line contains T, the number of test cases (1≤T≤1000). For each test case:
+
+The first line contains two integers x and y(−100,000≤x,y≤100,000) which denote the initial position of Reena and Meena on the mountain wall.
+The second line for each test case contains a string s(1≤∣s∣≤1000), representing the climbing instructions.
+The string s contains uppercase letters (U, D, R, L) and digits. The letters specify the direction, and the digits specify the distance to climb in that direction.
+Constraints
+
+1≤T≤1000 (Number of test cases)
+−100,000≤x,y≤100,000 (Initial coordinates)
+1≤∣s∣≤1000 (Length of instruction string)
+s only contains uppercase letters U, D, R, L and digits.
+Output Format
+
+For each test case, print the Euclidean distance from the origin (0,0) to the final position on the wall, rounded to 2 decimal places.
+
+Sample Input 0
+
+1  
+3 4  
+U2R3D6  
+Sample Output 0
+
+6.00
+Sample Input 1
+
+1  
+0 0  
+U10D2  
+Sample Output 1
+
+8.00
+Contest ends in 3 months
+Submissions: 78
+Max Score: 1
+
+
+
+code :
+ #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <iomanip> 
+using namespace std;
+
+
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+
+    while (T--) {
+        int x, y;
+        cin >> x >> y; // Read the initial position
+
+        string s;
+        cin >> s; // Read the climbing instructions
+
+        // Process the climbing instructions
+        for (size_t i = 0; i < s.length(); i++) {
+            char direction = s[i];
+            i++; // Move to the digit after the direction
+
+            // Read the distance (it can be more than one digit)
+            int distance = 0;
+            while (i < s.length() && isdigit(s[i])) { //fetching numbers from strings
+                distance = distance * 10 + (s[i] - '0'); // Build the distance
+                i++;
+            }
+            i--; // Adjust index back since the loop will increment it
+
+            // Update the position based on the direction
+            switch (direction) {
+                case 'U':
+                    y += distance; // Move up
+                    break;
+                case 'D':
+                    y -= distance; // Move down
+                    break;
+                case 'R':
+                    x += distance; // Move right
+                    break;
+                case 'L':
+                    x -= distance; // Move left
+                    break;
+            }
+        }
+
+        // Calculate the Euclidean distance from (0, 0)
+        double distanceFromOrigin = sqrt(1LL * x * x + 1LL * y * y);
+        cout << fixed << setprecision(2)<<distanceFromOrigin << endl; // Print the result
+    }
+
+    return 0;
+
+}
+
+
+ANALYSIS OF CODE :
+
+1.  distance = distance * 10 + (s[i] - '0'); 
+
+distance*10 means convert 3 to 30 .
+  
+  s[i] - '0' : 
+C++, characters are represented by their ASCII values. For example, the character '0' has an ASCII value of 48, '1' has 49, and so on up to '9', which has an ASCII value of 57.
+When you do s[i] - '0', you are converting the character s[i] (which is a digit character like '3') into its corresponding integer value. For example:
+If s[i] is '3', then s[i] - '0' equals 3 (because 51 - 48 = 3).
+If s[i] is '7', then s[i] - '0' equals 7 (because 55 - 48 = 7).
+
+ 
