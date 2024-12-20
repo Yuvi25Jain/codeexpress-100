@@ -1,0 +1,160 @@
+1. Question : task is to help the adventurers sort these cliffs based on the "spirit energy" required to overcome them.  The "spirit energy" of a cliff is calculated as the number of 1's in its binary representation. The cliffs should be sorted in ascending order of their spirit energy. If two or more cliffs have the same spirit energy, sort them by their difficulty scores in ascending order.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2. Input Format: 
+
+The first line will contain T, the number of test cases. For each test case:
+
+The first line contains N, the number of cliffs.
+The second line contains N space-separated integers, where each integer represents the difficulty score of a cliff.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Constraints
+
+1≤T≤100
+1≤N≤1000
+0≤difficulty score≤1,000,000
+Output Format
+
+For each test case, output the sorted list of cliff difficulty scores.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Sample Input 0
+
+1
+7
+5 3 2 5 8 2 7
+Sample Output 0
+
+2 2 8 3 5 5 7
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXPLANATION OF INPUT AND OUTPUT:
+7 cliff 
+  1. calculate spirit energy : space separated integer for eg 7 : binary representation is 111 , three 1s means 3 spirit evel (spirit level == number of 1s in binary form)
+    5 in binary is 101 → Spirit Energy = 2 (two 1s)
+    3 in binary is 11 → Spirit Energy = 2 (two 1s)
+    2 in binary is 10 → Spirit Energy = 1 (one 1)
+    5 in binary is 101 → Spirit Energy = 2 (two 1s)
+    8 in binary is 1000 → Spirit Energy = 1 (one 1)
+    2 in binary is 10 → Spirit Energy = 1 (one 1)
+    7 in binary is 111 → Spirit Energy = 3 (three 1s)
+
+
+    2.  Pairing Difficulty Scores with Spirit Energies: create pairs of (spirit energy, difficulty score): difficulty score is the number of clif in the input.
+
+    (2, 5) , (2, 3) , (1, 2), (2, 5) , (1, 8), (1, 2) , (3, 7)
+
+    spirit energy 1 : 2,8,2
+      sprirt enegy 2: 5,3,5
+        spirit energy 3 : 7
+          
+
+
+    3. sort the pair in spirit energy 1 , 2, 3 wise : 
+so final output : 2 2 8 3 5 5 7
+
+  eg2 : input  : 15 8 7 4 3 2 1 
+        output: 1 2 4 8 3 7 15
+
+
+explaination : 15 : 1111 : 4 (no of 1)
+                8: 1000 : 1
+                7 : 111 : 3
+                4 : 100 : 1
+                3 : 011 : 2
+                2 : 10 : 1 
+                1 : 1: 1 
+
+                  s1 : 8,4,2,1
+                    s2: 3
+                      s3: 7
+                        s4: 15
+
+                          output: 1,2,4,8,3,7,15
+
+
+
+
+  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  code: 
+
+#include <bitset>
+using namespace std;
+
+
+
+
+// Function to calculate the spirit energy (number of 1's in binary representation)
+int spiritEnergy(int difficulty) {
+    int count = 0;
+    while (difficulty) {
+        count += (difficulty & 1); // Increment count if the last bit is 1
+        difficulty >>= 1; // Right shift to process the next bit
+    }
+    return count;
+}
+
+int main() {
+    ios::sync_with_stdio(false); // Optimize input/output
+    cin.tie(nullptr); // Untie cin from cout for faster input
+
+    int T; // Number of test cases
+    cin >> T;
+
+    while (T--) {
+        int N; // Number of cliffs
+        cin >> N;
+
+        vector<int> cliffs(N);
+        for (int i = 0; i < N; ++i) {
+            cin >> cliffs[i]; // Read difficulty scores
+        }
+
+        // Create a vector of pairs to hold difficulty and its spirit energy
+        vector<pair<int, int>> cliffWithEnergy(N);
+        for (int i = 0; i < N; ++i) {
+            cliffWithEnergy[i] = {spiritEnergy(cliffs[i]), cliffs[i]};
+        }
+
+        // Sort by spirit energy first, then by difficulty score
+        sort(cliffWithEnergy.begin(), cliffWithEnergy.end());
+
+        // Output the sorted difficulty scores
+        for (const auto& cliff : cliffWithEnergy) {
+            cout << cliff.second << " ";
+        }
+        cout << "\n"; // New line after each test case
+    } 
+        return 0 ; 
+    
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+LEARNING FROM CODE AND OPTIMISATION: 
+
+for optimisation major changes are : 
+1. Spirit Energy Calculation: The spiritEnergy function has been optimized to use a simple loop to count the number of 1's in the binary representation of the difficulty score. This avoids the overhead of using std::bitset.
+
+2. Fast Input/Output: The use of ios::sync_with_stdio(false) and cin.tie(nullptr) helps speed up input and output operations, which can be beneficial when dealing with large amounts of data.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  Algorithm in my words: 
+1. Read the number of test cases.
+2. For each test case, read the number of cliffs and their respective difficulty scores.
+3. Calculate the spirit energy for each difficulty score.
+4. Sort the cliffs first by spirit energy and then by difficulty score if the spirit energies are the same.
+5. Output the sorted list of difficulty scores for each test case.
+
+  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+  
