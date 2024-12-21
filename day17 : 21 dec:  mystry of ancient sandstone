@@ -1,0 +1,79 @@
+Question: 
+
+
+You are given an array of integer rarity values where rarity[i] denotes the rarity of the ith sandstone and an integer k, which represents the number of distinct sandstones in the collection. The best match value of a sandstone collection is the smallest absolute difference of the rarity values of any two sandstones in the collection. In the Desert Sandstone Rarity Challenge, the goal is to find the maximum best match value of a sandstone collection by selecting k distinct sandstones.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+code : 
+  #include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool canSelectKWithMinDiff(const vector<int>& rarity, int k, int minDiff) {
+    int count = 1; // We can always select the first sandstone
+    int lastSelected = rarity[0];
+
+    for (std::vector<int>::size_type i = 1; i < rarity.size(); i++) { // Change to size_type
+        if (rarity[i] - lastSelected >= minDiff) {
+            count++;
+            lastSelected = rarity[i];
+            if (count == k) {
+                return true; // We can select k sandstones
+            }
+        }
+    }
+    return false; // Not possible to select k sandstones
+}
+
+int maxBestMatchValue(const vector<int>& rarity, int k) {
+    int left = 0;
+    int right = rarity.back() - rarity.front(); // Maximum possible difference
+    int bestMatchValue = 0;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+
+        if (canSelectKWithMinDiff(rarity, k, mid)) {
+            bestMatchValue = mid; // We can select k sandstones with at least mid difference
+            left = mid + 1; // Try for a larger minimum difference
+        } else {
+            right = mid - 1; // Try for a smaller minimum difference
+        }
+    }
+
+    return bestMatchValue;
+}
+
+int main() {
+    int T;
+    cin >> T; // Number of test cases
+
+    while (T--) {
+        int N, k;
+        cin >> N >> k; // Size of the array and number of distinct sandstones
+        vector<int> rarity(N);
+
+        for (int i = 0; i < N; i++) {
+            cin >> rarity[i]; // Input rarity values
+        }
+
+        sort(rarity.begin(), rarity.end()); // Sort the rarity values
+
+        int result = maxBestMatchValue(rarity, k);
+        cout << result << endl; // Output the result for the test case
+    }
+
+    return 0;
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  EXPLAINATION / ALGO / KEYTAKEAWAYS: 
+
+1. Input Handling: We read the number of test cases and for each test case, we read the size of the array and the number of distinct sandstones.
+2. Sorting: The rarity values are sorted to facilitate the selection process.
+3. Binary Search: We perform a binary search on the possible values of the smallest absolute difference.
+4. Greedy Selection: The function canSelectKWithMinDiff checks if we can select k sandstones with at least minDiff difference between them
