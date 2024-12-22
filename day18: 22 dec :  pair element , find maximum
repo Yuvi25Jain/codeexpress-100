@@ -1,0 +1,101 @@
+Question: 
+
+Each camel is assigned a load value representing its carrying capacity. To ensure a smooth journey, the camels need to be paired up into n/2 groups, and the goal is to minimize the maximum group load. The group load of a pair (a, b) is equal to a + b. For example, if we have pairs (1,5), (2,3), and (4,4), the maximum group load would be max(1+5, 2+3, 4+4) = max(6, 5, 8) = 8. Given an array loadCapacity of even length n, where each element represents the load value of a camel, pair up the camels into n / 2 groups such that:
+
+Each camel is in exactly one pair.
+The maximum group load is minimized.
+Output the minimized maximum group load after optimally pairing up the camels.
+
+Input Format
+
+The first line will give T, the number of test cases.
+The first line of each test case will give n.
+The second line of each test case will give an array loadCapacity of length n.
+Constraints
+
+1<=T<=1000
+n is even.
+2<=n<=10^5
+1<= loadCapacity[i]<=10^9
+Output Format
+
+For each test case, output the minimized maximum group load after optimally pairing up the camels.
+
+----------------------------------------------------------------------------------------------
+INPUT AND OUTPUT: 
+Sample Input 0
+
+1
+4
+3 5 2 3
+Sample Output 0
+
+7
+----------------------------------------------------------------------------------------------
+
+LEARNING:
+
+1. algorithm head : #<algorithm> is used to sorting .
+2.  sort(loadCapacity.begin(), loadCapacity.end()); : we get groupload from below loop. to easily access the lighest and heavist camels.
+3. heaviest load n-1-i is used because the array is sorted in ascending order and as i increase start (light ) is move towards middle and end(heavy ) is moved towards midle.
+
+4. Input Handling: The program reads multiple test cases, and for each test case, it reads the number of camels and their respective load capacities.
+
+----------------------------------------------------------------------------------------------
+
+ERROR / OPTIMISATION/ SOLUTION: 
+
+----------------------------------------------------------------------------------------------
+CODE:
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int minimizedMaxGroupLoad(int n, vector<int>& loadCapacity) {
+    // Sort the load capacities
+    sort(loadCapacity.begin(), loadCapacity.end());
+    
+    int maxGroupLoad = 0;
+    
+    // Pair the lightest with the heaviest
+    for (int i = 0; i < n / 2; ++i) {
+        int groupLoad = loadCapacity[i] + loadCapacity[n - 1 - i];
+        maxGroupLoad = max(maxGroupLoad, groupLoad);
+    }
+    
+    return maxGroupLoad;
+}
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+    
+    while (T--) {
+        int n;
+        cin >> n; // Read the number of camels (even)
+        
+        vector<int> loadCapacity(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> loadCapacity[i]; // Read the load capacities
+        }
+        
+        // Get the minimized maximum group load
+        int result = minimizedMaxGroupLoad(n, loadCapacity);
+        
+        // Output the result
+        cout << result << endl;
+    }
+    
+    return 0;
+}
+
+
+
+
+
+
+
