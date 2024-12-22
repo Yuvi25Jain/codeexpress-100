@@ -1,0 +1,93 @@
+Question: 
+
+ Vansh wants to know which trees yielded a specific target number of dates. Before finding these trees, he needs to sort his harvest log in non-decreasing order. Your task is to help Vansh by outputting the indices of the trees that yielded the target number of dates after sorting the log. If no tree matches the target, return an empty list. Ensure the output indices are sorted in increasing order.
+
+------------------------------------------------------------------------------------------------
+
+
+
+   Input Format
+
+The first line will be T, the number of test cases. For each test case: The first line contains two integers N (the number of trees) and target (the target number of dates). The second line contains an array arr of size N, where arr[i] represents the number of dates harvested from the ith tree.
+
+Constraints
+
+1<=T<=100 1<=N<=1000 1<=target<=1000 0<= arr[i]<=1000
+
+Output Format
+
+For each test case, output the space-separated indices representing the trees that yielded the target number of dates after sorting the harvest log. If no tree matches the target, output an empty list.
+
+
+-----------------------------------------------------------------------------------------------
+CODE: 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility> // For std::pair
+
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+
+    while (T--) {
+        size_t N; // Use size_t for N
+        int target;
+        cin >> N >> target; // Read the number of trees and the target number of dates
+
+        vector<int> arr(N);
+        for (size_t i = 0; i < N; i++) { // Use size_t for the loop index
+            cin >> arr[i]; // Read the number of dates harvested from each tree
+        }
+
+        // Create a vector of pairs to store the original indices and the values
+        vector<pair<int, size_t>> indexedArr(N); // Use size_t for the index
+        for (size_t i = 0; i < N; i++) { // Use size_t for the loop index
+            indexedArr[i] = {arr[i], i}; // Pair of (number of dates, original index)
+        }
+
+        // Sort the array based on the number of dates
+        sort(indexedArr.begin(), indexedArr.end());
+
+        // Find the indices of trees that yielded the target number of dates
+        vector<size_t> resultIndices; // Use size_t for the result indices
+        for (size_t i = 0; i < N; i++) { // Use size_t for the loop index
+            if (indexedArr[i].first == target) {
+                resultIndices.push_back(indexedArr[i].second); // Store the original index
+            }
+        }
+
+        // Sort the result indices in increasing order
+        sort(resultIndices.begin(), resultIndices.end());
+
+        // Output the result
+        if (resultIndices.empty()) {
+            cout << endl; // Print an empty line if no tree matches the target
+        } else {
+            for (size_t i = 0; i < resultIndices.size(); i++) { // Use size_t for the loop index
+                cout << resultIndices[i];
+                if (i < resultIndices.size() - 1) {
+                    cout << " "; // Print space between indices
+                }
+            }
+            cout << endl; // New line after each test case output
+        }
+    }
+
+    return 0;
+}
+
+
+
+ ----------------------------------------------------------------------------------------------- 
+LEARNING/ EXPLANATION: 
+
+
+Input Handling: The program reads the number of test cases and for each test case, it reads the number of trees and the target number of dates.
+Index Tracking: It creates a vector of pairs where each pair contains the number of dates and the original index of the tree.
+Sorting: The vector of pairs is sorted based on the number of dates.
+Finding Indices: The program checks which trees yielded the target number of dates and stores their original indices.
+Output: Finally, it sorts the indices and prints them. If no indices match the target, it prints an empty line.
+   
