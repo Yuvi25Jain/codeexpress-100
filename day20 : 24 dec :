@@ -1,0 +1,193 @@
+Question: 
+
+
+
+To keep his camel caravan balanced, he needs to pair supplies such that the total weight of each pair equals exactly k. Mranal’s goal is to form the maximum number of such pairs to ensure that the journey through the arid sands is efficient and nothing is wasted. Can you help Mranal optimize his pairings and survive another day in the desert?
+
+Input Format
+
+The input format remains unchanged:
+The first line will be T, the number of test cases.
+For each test case:
+The first line gives n, the number of supplies, and k, the target weight for each pair.
+The second line contains an array masses of n integers, representing the weights of the supplies.
+Constraints
+
+1<=T<=10^3
+1<=K<=10^8
+1<=n<=10^3
+0<=masses[i]<=10^9
+Output Format
+
+For each test case, output the maximum number of pairs Mranal can form.
+
+Sample Input 0
+
+1  
+4 5  
+1 2 3 4
+Sample Output 0
+
+2
+Explanation 0
+
+Starting with masses = [1, 2, 3, 4]:
+
+Remove weights 1 and 4, then masses = [2, 3].
+Remove weights 2 and 3, then masses = [].
+There are no more pairs that sum up to 5, hence a total of 2 operations.
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+CODE: 
+
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+using namespace std;
+
+
+
+
+int maxPairs(vector<int>& masses, int k) {
+    unordered_map<int, int> weightCount;
+    int pairs = 0;
+
+    // Count the occurrences of each weight
+    for (int weight : masses) {
+        weightCount[weight]++;
+    }
+
+    // Iterate through the weights to find pairs
+    for (auto& entry : weightCount) {
+        int weight = entry.first;
+        int complement = k - weight;
+
+        // If the weight and its complement are the same
+        if (weight == complement) {
+            // We can form pairs from the same weight
+            pairs += weightCount[weight] / 2;
+        } else if (weightCount.find(complement) != weightCount.end()) {
+            // Find the minimum count of the weight and its complement
+            pairs += min(weightCount[weight], weightCount[complement]);
+            // Mark the complement as used by setting its count to 0
+            weightCount[complement] = 0;
+        }
+    }
+
+    return pairs;
+}
+
+int main() {
+    int T;
+    cin >> T; // Number of test cases
+
+    while (T--) {
+        int n, k;
+        cin >> n >> k; // Number of supplies and target weight
+        vector<int> masses(n);
+
+        for (int i = 0; i < n; i++) {
+            cin >> masses[i]; // Read the weights
+        }
+
+        // Calculate and print the maximum number of pairs
+        cout << maxPairs(masses, k) << endl;
+    }
+
+ 
+    
+    return 0;
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LEARNING / EXPLAINATION:
+
+1.  unordered_map<int, int> weightCount; : is a part of c++ to create hash table. allows for fast retrival of values based on keys. here key and value are of type of int.
+
+  the purpose of weight count is to keep track how many times each weight appear in the massses array.
+
+
+
+2. for (int weight : masses) {
+        weightCount[weight]++;
+    } : 
+
+  line 1: range based for loop iterates each element in the mass vector.
+    int weight declares a variable weight that will take on the value of each element in the masses array during each iteration of the loop.
+masses is the vector containing the weights of the supplies. The loop will go through each weight in this vector one by one.
+
+    Line 2: weightCount[weight]++;
+
+This line updates the weightCount unordered map for the current weight.
+weightCount[weight] accesses the value associated with the key weight in the weightCount map.
+The ++ operator increments the count of that weight by 1. If weight is not already in the map, it will be automatically initialized to 0 (due to the behavior of unordered maps in C++), and then incremented to 1.
+Essentially, this line counts how many times each weight appears in the masses vector.
+
+
+
+  3. for (auto& entry : weightCount) {
+        int weight = entry.first;
+        int complement = k - weight;
+
+        // If the weight and its complement are the same
+        if (weight == complement) {
+            // We can form pairs from the same weight
+            pairs += weightCount[weight] / 2;
+        } else if (weightCount.find(complement) != weightCount.end()) {
+            // Find the minimum count of the weight and its complement
+            pairs += min(weightCount[weight], weightCount[complement]);
+            // Mark the complement as used by setting its count to 0
+            weightCount[complement] = 0;
+        }
+    }
+
+
+
+
+i. Loop Through Each Entry in weightCount : This line iterates over each key-value pair in the weightCount unordered map. Each entry represents a unique weight and its count.
+entry.first is the weight, and entry.second is the count of that weight.
+
+
+ii. Extract Weight and Calculate Complement: weight is assigned the current weight from the map.
+complement is calculated as the difference between the target weight k and the current weight. This is the value we need to find in order to form a valid pair.
+
+
+iii. Check if Weight and Complement are the Same: This condition checks if the current weight is equal to its complement. This would happen when k is an even number and weight is exactly half of k.
+For example, if k is 6 and weight is 3, then complement is also 3.
+
+
+
+iv. Form Pairs from the Same Weight: 
+  If the weight and its complement are the same, we can form pairs from the same weight.
+The number of pairs that can be formed from weightCount[weight] items is weightCount[weight] / 2 (since each pair consists of two items).
+This value is added to the pairs counter.
+
+
+  v. Check for Complement in the Map: f the weight and complement are not the same, we check if the complement exists in the weightCount map.
+weightCount.find(complement) != weightCount.end() checks if the complement is a key in the map.
+
+vi. Form Pairs from Different Weights: If the complement exists, we can form pairs from the current weight and its complement.
+The number of pairs that can be formed is the minimum of the counts of the two weights: min(weightCount[weight], weightCount[complement]).
+This value is added to the pairs counter.
+
+
+
+vii.  Mark the Complement as Used: After counting the pairs, we set the count of the complement to 0 to mark it as used. This prevents double counting in future iterations.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    
+
+    
