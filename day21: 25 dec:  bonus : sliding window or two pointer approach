@@ -1,0 +1,86 @@
+Question : 
+
+You are on a treasure hunt deep within an ancient forest. The forest path is marked with milestones, each containing a number representing the energy you'll gain or lose at that point. To successfully complete your treasure hunt, you need to accumulate at least k units of energy. Your goal is to find the shortest stretch of the path (a contiguous segment of milestones) where the total energy you gain is at least k. If no such segment exists, return -1, as it would mean the treasure is out of reach. Can you overcome the challenges of the forest and find the shortest path to your treasure?
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+
+For each test case:
+
+The first line contains an integer n, the number of milestones on the path, and an integer k, the required energy.
+The second line contains n integers, nums[i], representing the energy gain or loss at the i-th milestone.
+Constraints
+
+1<=T<=10
+1<=n<=10^5
+1<=k<=10^9
+-10^5<=nums[i]<=10^5
+Output Format
+
+For each test case, output the length of the shortest contiguous segment of the path with a total energy of at least k. If no such segment exists, output -1.
+
+Sample Input 0
+
+1
+1 1 
+1
+Sample Output 0
+
+1
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+code :
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <limits>
+using namespace std;
+
+
+
+
+int shortestSubarrayWithSumAtLeastK(const vector<int>& nums, int k) {
+    int n = nums.size();
+    int minLength = numeric_limits<int>::max(); // Initialize to maximum possible value
+    int currentSum = 0;
+    int left = 0;
+
+    for (int right = 0; right < n; right++) {
+        currentSum += nums[right]; // Expand the window by adding the right element
+
+        // Shrink the window from the left as long as the sum is at least k
+        while (currentSum >= k) {
+            minLength = min(minLength, right - left + 1); // Update the minimum length
+            currentSum -= nums[left]; // Remove the left element
+            left++; // Move the left pointer to the right
+        }
+    }
+
+    return (minLength == numeric_limits<int>::max()) ? -1 : minLength; // Return -1 if no valid segment found
+}
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+
+    while (T--) {
+        int n, k;
+        cin >> n >> k; // Read number of milestones and required energy
+
+        vector<int> nums(n);
+        for (int i = 0; i < n; i++) {
+            cin >> nums[i]; // Read the energy values at each milestone
+        }
+
+        int result = shortestSubarrayWithSumAtLeastK(nums, k); // Get the result
+        cout << result << endl; // Output the result for the test case
+    }
+
+  
+    return 0;
+}
