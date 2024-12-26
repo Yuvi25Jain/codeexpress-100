@@ -1,0 +1,130 @@
+Question:
+
+Aladdin has stumbled upon a magical grid in the Cave of Wonders. This grid is filled with mysterious numbers that hold the key to unlocking untold treasures. However, to access the treasure, the grid must be transformed into a uni-value grid, where every number in the grid becomes the same. Aladdin can only use a magical number, x, to either add or subtract from the numbers in the grid. The Genie has set this challenge for Aladdin: transform the grid using the minimum number of magical operations. If it's impossible to create a uni-value grid, Aladdin must return empty-handed. Can you help Aladdin calculate the minimum number of operations required to make the grid uni-value, or determine if the task is impossible?
+
+Input Format
+
+The first line contains T, the number of test cases. For each test case: The first line contains two integers, m (rows) and n (columns), followed by the magical number x. The next m lines contain n integers representing the grid. Constraints
+
+1<=T<=1000 1<=m,n<=25 1<=x<=10 -100000<=matrix[i][j]<=100000 Output Format
+
+For each test case, output the minimum number of operations required to make the grid uni-value. If it's not possible, output -1.
+
+Sample Input 0
+
+1 2 2 2 2 4 6 8 
+  
+Sample Output 0
+
+4
+
+----------------------------------------------------------------------------------------------
+
+CODE: 
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_set>
+#include <climits> 
+using namespace std;
+
+
+
+int minOperationsToUniValueGrid(vector<vector<int>>& grid, int x) {
+    unordered_set<int> possibleValues;
+    int m = grid.size();
+    int n = grid[0].size();
+
+    // Collect all unique values in the grid
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            possibleValues.insert(grid[i][j]);
+        }
+    }
+
+    int minOperations = INT_MAX;
+
+    // Check each unique value as a target
+    for (int target : possibleValues) {
+        int operations = 0;
+        bool possible = true;
+
+        // Calculate operations needed to convert all elements to target
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                int diff = abs(grid[i][j] - target);
+                if (diff % x != 0) {
+                    possible = false;
+                    break;
+                }
+                operations += diff / x;
+            }
+            if (!possible) break;
+        }
+
+        if (possible) {
+            minOperations = min(minOperations, operations);
+        }
+    }
+
+    return (minOperations == INT_MAX) ? -1 : minOperations;
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int m, n, x;
+        cin >> m >> n >> x;
+
+        vector<vector<int>> grid(m, vector<int>(n));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                cin >> grid[i][j];
+            }
+        }
+
+        int result = minOperationsToUniValueGrid(grid, x);
+        cout << result << endl;
+    }
+
+ 
+    return 0;
+}
+----------------------------------------------------------------------------------------------
+
+  LEARNING / EXPLANATION: 
+
+1. INT_MAX: <climits> header
+2. #include <unordered_set>: To use a set that allows for fast lookups of unique values.
+3. vector<vector<int>>& grid  : 2d grid (grid of numbers)
+4. for (int target : possibleValues)  : range-based for loop . It  provides a more concise and readable way to iterate over elements in a container, such as arrays, vectors, or sets.
+
+  Syntax: for (declaration : container) {
+    // Code to execute for each element
+}
+
+declaration: This is where you declare a variable that will take on the value of each element in the container during each iteration. In your case, int target declares a variable named target of type int.
+container: This is the collection you want to iterate over. In your example, possibleValues is an unordered_set<int>, which contains unique integers.
+
+
+  The loop iterates over each element in the possibleValues set.
+On each iteration, the current element from the set is assigned to the variable target.
+The code inside the loop can then use target to perform operations or checks.
+
+
+  Advantage : 
+
+Simplicity: The range-based for loop eliminates the need for iterators or index variables, making the code cleaner and easier to read.
+Safety: It reduces the risk of off-by-one errors that can occur with traditional for loops that use indices.
+Flexibility: It works with any container that supports the begin() and end() methods, including standard library containers like vector, list, set, and unordered_set.
+
+
+
+  
+
