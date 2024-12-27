@@ -1,0 +1,174 @@
+Question: 
+
+
+The oasis is represented as a 2D grid of water tiles, where each tile can either shimmer with life (1) or fade into sand (0). The oasis shifts and transforms with time, following these magical rules:
+
+Any shimmering tile (1) with fewer than two neighboring shimmering tiles fades into sand (0).
+Any shimmering tile (1) with two or three shimmering neighbors continues to shimmer (1).
+Any shimmering tile (1) with more than three shimmering neighbors is overwhelmed and fades into sand (0).
+Any sandy tile (0) with exactly three shimmering neighbors becomes alive with shimmer (1).
+These transformations happen simultaneously across the entire grid. Your task is to determine the next transformation of the oasis after applying the magical rules to the given mxn grid.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Input Format
+
+The first line contains T, the number of test cases.
+
+For each test case:
+
+The first line contains two integers m and n, representing the dimensions of the oasis grid.
+The next m lines contain n integers each (0 or 1), representing the current state of the oasis grid.
+Constraints
+
+1<=T<=1000
+1<=m,n<=25
+matrix[i][j] is either 0 (sandy tile) or 1 (shimmering tile).
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+Output Format
+
+For each test case, output the next state of the oasis grid after applying the magical transformation rules.
+
+Sample Input 0
+
+1
+4 3
+0 1 0
+0 0 1
+1 1 1
+0 0 0
+Sample Output 0
+
+0 0 0
+1 0 1
+0 1 1
+0 1 0
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE : 
+
+
+// #include <cmath> for mathematical fucniton
+// #include <cstdio> for c style input/output (not used in this code) 
+#include <vector>
+#include <iostream>
+//#include <algorithm> for algorithm
+using namespace std;
+
+
+
+
+
+// Function to count the number of shimmering neighbors
+int countShimmeringNeighbors(const vector<vector<int>>& grid, int x, int y) {
+    int count = 0;
+    int directions[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+    
+    for (auto& dir : directions) {
+        int newX = x + dir[0];
+        int newY = y + dir[1];
+        // Check if newX and newY are within bounds
+        if (newX >= 0 && newX < static_cast<int>(grid.size()) && newY >= 0 && newY < static_cast<int>(grid[0].size())) {
+            count += grid[newX][newY];
+        }
+    }
+    
+    return count;
+}
+
+// Function to get the next state of the oasis grid
+vector<vector<int>> getNextState(const vector<vector<int>>& grid) {
+    int m = grid.size(); //no of row
+    int n = grid[0].size(); //no of coloumn
+    vector<vector<int>> nextGrid(m, vector<int>(n, 0));
+    
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            int neighbors = countShimmeringNeighbors(grid, i, j);
+            if (grid[i][j] == 1) { // Shimmering tile
+                if (neighbors < 2 || neighbors > 3) {
+                    nextGrid[i][j] = 0; // Fades into sand
+                } else {
+                    nextGrid[i][j] = 1; // Continues to shimmer
+                }
+            } else { // Sandy tile
+                if (neighbors == 3) {
+                    nextGrid[i][j] = 1; // Becomes alive with shimmer
+                } else {
+                    nextGrid[i][j] = 0; // Remains sand
+                }
+            }
+        }
+    }
+    
+    return nextGrid;
+}
+
+int main() {
+    int T;
+    cin >> T; // Number of test cases
+    while (T--) {
+        int m, n;
+        cin >> m >> n; // Dimensions of the grid
+        vector<vector<int>> grid(m, vector<int>(n));
+        
+        // Read the grid
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                cin >> grid[i][j];
+            }
+        }
+        
+        // Get the next state of the grid
+        vector<vector<int>> nextGrid = getNextState(grid);
+        
+        // Output the next state
+        for (const auto& row : nextGrid) {
+            for (int cell : row) {
+                cout << cell << " ";
+            }
+            cout << endl;
+        }
+    }
+    
+    return 0;
+}
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+  LEARNING / EXPLANATION / ERROR :
+
+simulation of grid based system in which shimmering for 1 and sandy by 0.
+
+
+1. int directions[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}; :: 
+
+8 rows and 2 coloumn . 
+
+
+  (i-1, j-1)  (i-1, j)  (i-1, j+1)
+    |          |          |
+(i, j-1)  (i, j)  (i, j+1)
+    |          |          |
+(i+1, j-1)  (i+1, j)  (i+1, j+1)
+
+
+  {-1, -1}: This represents the top-left neighbor. To access this neighbor, you would move one row up and one column left from the current cell.
+{-1, 0}: This represents the top neighbor. You move one row up and stay in the same column.
+{-1, 1}: This represents the top-right neighbor. You move one row up and one column right.
+{0, -1}: This represents the left neighbor. You stay in the same row and move one column left.
+{0, 1}: This represents the right neighbor. You stay in the same row and move one column right.
+{1, -1}: This represents the bottom-left neighbor. You move one row down and one column left.
+{1, 0}: This represents the bottom neighbor. You move one row down and stay in the same column.
+{1, 1}: This represents the bottom-right neighbor. You move one row down and one column right.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+  
