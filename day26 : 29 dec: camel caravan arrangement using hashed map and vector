@@ -1,0 +1,95 @@
+Question :
+
+
+each camel is marked with a unique identifier made up of alphanumeric characters. The caravan leader wants to arrange the camels in an order such that the identifiers are sorted by the frequency of their appearance in the caravan logs. The identifiers with higher frequencies should appear first. If two identifiers have the same frequency, they should be arranged in ascending order of their ASCII values.
+
+Write a program that outputs the arranged string of camel identifiers based on the rules above.
+
+Input Format
+
+The first line will give T, the number of test cases.
+Each test case will provide you with a string s, representing the sequence of camel identifiers.
+Constraints
+
+1<=T<=1000
+s.length <= 10000
+Output Format
+
+Output the arranged string of camel identifiers for each test case.
+Sample Input 0
+
+1
+camel
+Sample Output 0
+
+acelm
+Explanation 0
+
+The identifier 'c', 'a', 'm', 'e', and 'l' each appear exactly once. Since all characters have the same frequency, they are sorted in ascending order of their ASCII values: 'a', 'c', 'e', 'l', 'm'.
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE : 
+#include <unordered_map>
+#include <vector>
+using namespace std;
+
+
+
+// Comparator function to sort based on frequency and ASCII value
+bool customComparator(const pair<char, int>& a, const pair<char, int>& b) {
+    if (a.second == b.second) {
+        return a.first < b.first; // Sort by ASCII value if frequencies are the same
+    }
+    return a.second > b.second; // Sort by frequency
+}
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+    cin.ignore(); // Ignore the newline after the number
+
+    while (T--) {
+        string s;
+        getline(cin, s); // Read the camel identifiers string
+
+        unordered_map<char, int> frequencyMap;
+
+        // Count the frequency of each character
+        for (char c : s) {
+            frequencyMap[c]++;
+        }
+
+        // Create a vector of pairs to sort
+        vector<pair<char, int>> freqVector(frequencyMap.begin(), frequencyMap.end());
+
+        // Sort the vector using the custom comparator
+        sort(freqVector.begin(), freqVector.end(), customComparator);
+
+        // Build the output string based on sorted order
+        string result;
+        for (const auto& pair : freqVector) {
+            result += string(pair.second, pair.first); // Append the character 'pair.second' times
+        }
+
+        cout << result << endl; // Output the result for the current test case
+    }
+
+    
+    return 0;
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  EXPLANATION : 
+1. imp library should be imported such as unordered map and vectors.
+2. Hash Maps (unordered_map): Used to count the frequency of each character in the string. This allows for efficient lookups and insertions.
+Vectors: Used to store pairs of characters and their frequencies for sorting.
+
+3. sorting lagortihmm : custom sorting : uses a custom comparator function to sort the vector of character frequency pairs based on 2 criteria : frequency (in descending order) and ASCII value(in ascending oder).
+
+4. complexcity of counting frequencies : O(n)
+                  sorting : O (nlogn)
+  
