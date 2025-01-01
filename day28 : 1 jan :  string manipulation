@@ -1,0 +1,131 @@
+Question:
+
+
+The desert cartographers use a special map encoding system to mark different regions. Each region is named using a specific pattern of symbols derived from the American keyboard layout.
+
+The symbols are divided into three sand trails:
+
+The first trail contains "qwertyuiop".
+The second trail contains "asdfghjkl".
+The third trail contains "zxcvbnm".
+A fellow cartographer proposes some encoded region names and claims they belong to a single sand trail. Your task is to verify if the given region name can be completely typed using symbols from only one sand trail.
+
+Print "yes" if it's possible; otherwise, print "no".
+
+Input Format
+
+The first line contains T, the number of test cases.
+Each test case contains a string representing the encoded region name.
+Constraints
+
+1<=T<=100
+string.length<=1000
+Output Format
+
+For each test case, output "yes" if the encoded region name can be typed using a single sand trail, otherwise "no".
+
+Sample Input 0
+
+2  
+Alaska
+Dad
+Sample Output 0
+
+yes  
+yes
+Explanation 0
+
+"Alaska" can be typed using the second sand trail: "asdfghjkl".
+"Dad" can also be typed using the second sand trail: "asdfghjkl".
+
+
+
+Answer/ code :
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <unordered_set>
+#include <cctype> // for tolower
+using namespace std;
+
+
+
+int main() {
+    // Define the three sand trails using unordered sets for fast membership checking
+    unordered_set<char> trail1 = {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'};
+    unordered_set<char> trail2 = {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'};
+    unordered_set<char> trail3 = {'z', 'x', 'c', 'v', 'b', 'n', 'm'};
+
+    // Read the number of test cases
+    int T;
+    cin >> T;
+    cin.ignore(); // To ignore the newline character after the number input
+
+    // Loop through each test case
+    for (int i = 0; i < T; ++i) {
+        // Read the encoded region name
+        string region_name;
+        getline(cin, region_name);
+
+        // Convert the region name to lowercase
+        for (char &c : region_name) {
+            c = tolower(c);
+        }
+
+        // Initialize flags to check if the region name belongs to each trail
+        bool in_trail1 = true;
+        bool in_trail2 = true;
+        bool in_trail3 = true;
+
+        // Check each character in the region name
+        for (char c : region_name) {
+            if (trail1.find(c) == trail1.end()) {
+                in_trail1 = false; // If char is not in trail1, set flag to false
+            }
+            if (trail2.find(c) == trail2.end()) {
+                in_trail2 = false; // If char is not in trail2, set flag to false
+            }
+            if (trail3.find(c) == trail3.end()) {
+                in_trail3 = false; // If char is not in trail3, set flag to false
+            }
+        }
+
+        // If only one of the trails has a true flag, it means the region name can be typed using that trail
+        if ((in_trail1 && !in_trail2 && !in_trail3) || 
+            (!in_trail1 && in_trail2 && !in_trail3) || 
+            (!in_trail1 && !in_trail2 && in_trail3)) {
+            cout << "yes" << endl;
+        } else {
+            cout << "no" << endl;
+        }
+    }
+
+ 
+    return 0;
+}
+
+
+EXPLANATION :
+
+1. unordered set : allows for fast membership checking : O(1) average time complexcity.
+2. cctype : for character handling function like tolower
+3. cin.ignore : to ignore newline character left in the input after reading T.
+4. getline : reads the space.
+5. convert the region name to lowercase using for(char &c : region_name){ c = tolower(c) ;} to make this insensitive
+6. to convert string to lowercase manually without using library : 
+ for (int i = 0; i < input.length(); ++i) {
+        // Check if the character is an uppercase letter
+        if (input[i] >= 'A' && input[i] <= 'Z') {
+            // Convert to lowercase by adding 32
+            input[i] = input[i] + 32;
+        }
+
+
+we can iterate through each character of string and check if it is an uppercase letter. If it is we can convert it to lowercase by adding the difference between the ASCII values of 'a' and 'A' (which is 32)
+
+
