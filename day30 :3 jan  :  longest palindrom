@@ -1,0 +1,173 @@
+Question : 
+
+The Oracle has presented you with a string of mystical runes, containing a mix of alphanumeric symbols. The challenge is to rearrange these runes to form the longest symmetric incantation, also known as a palindrome. Your task is to determine the maximum length of the incantation that can be formed by selecting and rearranging any subset of the runes.
+
+Input Format
+
+The first line will give 𝑇, the number of test cases. Each of the next 𝑇 lines will provide a string 𝑆, representing the mystical runes. Constraints
+
+1<=T<=1000 S.length <=1000 S only contains alphanumeric characters. Output Format
+
+For each test case, print the length of the longest possible symmetric incantation that can be formed.
+
+Sample Input 
+
+1 babadab 
+  
+Sample Output 
+
+5 
+  
+Explanation 
+
+Some Possible Palindrome that can be constructed from given string are:-
+
+babab abbba baaab ababa etc. Maximum length that can be achieved is 5.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE : 
+
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+    cin.ignore(); // Ignore the newline character after the integer input
+
+    while (T--) {
+        string S;
+        getline(cin, S); // Read the string of mystical runes
+
+        unordered_map<char, int> charCount; // To store the frequency of each character
+
+        // Count the frequency of each character in the string
+        for (char c : S) {
+            charCount[c]++;
+        }
+
+        int length = 0; // To store the length of the longest palindrome
+        bool hasOdd = false; // To check if there's at least one character with an odd count
+
+        // Calculate the maximum length of the palindrome
+        for (const auto& entry : charCount) {
+            if (entry.second % 2 == 0) {
+                length += entry.second; // Add even counts directly
+            } else {
+                length += entry.second - 1; // Add the largest even part of odd counts
+                hasOdd = true; // Mark that we have at least one odd count
+            }
+        }
+
+        // If there's at least one character with an odd count, we can add one more to the length
+        if (hasOdd) {
+            length += 1;
+        }
+
+        cout << length << endl; // Output the result for the current test case
+    }
+
+    return 0;
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXPLANATION/LEARNING : 
+
+1. Edge Cases to Consider:
+Empty String: Should return 0.
+Single Character: Should return 1.
+All Identical Characters: Should return the length of the string.
+All Unique Characters: Should return 1 (only one character can be in the center).
+Mixed Characters: Should handle any combination of characters correctly.
+
+
+2. The logic for counting character frequencies and determining the maximum length of a palindrome is sound.
+
+
+3. Calculating Maximum Palindrome Length:
+
+For each character's count:
+If the count is even, we can use all of them in the palindrome.
+If the count is odd, we can use count - 1 (to make it even) and mark that we have at least one odd character.
+If there is at least one character with an odd count, we can add 1 to the total length to account for a center character in the palindrome.
+
+
+4. for (const auto& entry : charCount) {
+            if (entry.second % 2 == 0) {
+                length += entry.second; // Add even counts directly
+            } else {
+                length += entry.second - 1; // Add the largest even part of odd counts
+                hasOdd = true; // Mark that we have at least one odd count
+            }
+        }
+
+        // If there's at least one character with an odd count, we can add one more to the length
+        if (hasOdd) {
+            length += 1;
+        }
+
+explanation : 
+Loop Through Character Counts:
+
+for (const auto& entry : charCount): This line iterates over each entry in the charCount map, where entry.first is the character and entry.second is the count of that character.
+Check for Even Counts:
+
+if (entry.second % 2 == 0): This condition checks if the count of the current character is even.
+If the count is even, we can use all of those characters in the palindrome because they can be symmetrically placed around the center.
+length += entry.second;: We add the entire count of that character to the length.
+Check for Odd Counts:
+
+else: This block executes if the count is odd.
+length += entry.second - 1;: Since we can only use an even number of characters to maintain symmetry, we add entry.second - 1 to the length. This effectively uses the largest even part of the odd count.
+hasOdd = true;: We set this flag to true because we have encountered at least one character with an odd count. This is important because we can use one odd character in the center of the palindrome.
+Final Adjustment for Odd Counts:
+
+if (hasOdd) { length += 1; }: After processing all characters, if we found at least one character with an odd count, we can add 1 to the length. This accounts for the possibility of placing one odd character in the center of the palindrome.
+Example
+Let's consider an example string: "aabbccdde".
+
+Character Count:
+
+a: 2
+b: 2
+c: 2
+d: 2
+e: 1
+Processing Each Character:
+
+For a (count = 2):
+Even count, so length += 2 → length = 2.
+For b (count = 2):
+Even count, so length += 2 → length = 4.
+For c (count = 2):
+Even count, so length += 2 → length = 6.
+For d (count = 2):
+Even count, so length += 2 → length = 8.
+For e (count = 1):
+Odd count, so length += 1 - 1 → length = 8 (we add 0).
+Set hasOdd = true.
+Final Adjustment:
+
+Since hasOdd is true, we add 1 to length → length = 9.
+Result
+The maximum length of the palindrome that can be formed from the string "aabbccdde" is 9. A possible palindrome could be "abcdeedcba".
+
+
+5. Complexcity  : O(n) n is lenght of input string.
+
+
+  
+
+
+
+  
+
+
+
+
