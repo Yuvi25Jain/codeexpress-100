@@ -1,0 +1,86 @@
+Question : 
+
+a palindrome that reads the same forward and backward. To use the mirror, townsfolk must process their phrases by converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters (letters and numbers only).
+
+Can you help the townsfolk check if their phrases are perfect reflections?
+
+Input Format
+
+The first line contains T, the number of test cases.
+For each test case:
+A single line contains a string s, representing the phrase to check.
+Constraints
+
+1≤s.length≤2×10^5
+s consists only of printable ASCII characters.
+Output Format
+
+For each test case, output "true" if the phrase is a palindrome and "false" otherwise.
+Sample Input 0
+
+1
+A man, a plan, a canal: Panama  
+Sample Output 0
+
+true  
+Explanation 0
+
+Test Case 1: The phrase "A man, a plan, a canal: Panama" is processed by: Converting all uppercase letters to lowercase. Removing spaces, punctuation, and any non-alphanumeric characters. The resulting string is "amanaplanacanalpanama", which reads the same forward and backward. Therefore, the output is "true".
+-----------------------------------------------------------------------------------------------
+
+CODE: 
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm> //to reverse 
+#include <string>
+#include <cctype> // for std::isalnum and std::tolower
+using namespace std;
+
+
+
+bool isPalindrome(const std::string& s) {
+    std::string filtered; // To store the processed string
+
+    // Process the input string
+    for (char c : s) {
+        if (std::isalnum(c)) { // Check if the character is alphanumeric
+            filtered += std::tolower(c); // Convert to lowercase and add to filtered string
+        }
+    }
+
+    // Check if the filtered string is a palindrome
+    std::string reversed = filtered; // Create a copy of the filtered string
+    std::reverse(reversed.begin(), reversed.end()); // Reverse the copy
+
+    return filtered == reversed; // Compare the filtered string with its reverse
+}
+
+int main() {
+    int T; // Number of test cases
+    std::cin >> T; // Read the number of test cases
+    std::cin.ignore(); // Ignore the newline character after the number input
+
+    while (T--) {
+        std::string s; // To store the input phrase
+        std::getline(std::cin, s); // Read the entire line as a phrase
+        std::cout << (isPalindrome(s) ? "true" : "false") << std::endl; // Output the result
+    }
+
+ 
+    return 0;
+}
+-----------------------------------------------------------------------------------------------
+
+  EXPLANATION : 
+
+1. bool isPalindrome(const std::string& s) : const is a keyword indicate that param s is a constant reference . it means that the functun will not modify the string passed to it. it is important for safety and clarity as it prevents accidental changes to the input string.
+
+  std::string : standard library class in cpp that repreents a sequence of characters (a string). It provides various functionalities for string manipulation, such as concatenation, substring extraction, and more.
+
+  
+
+
