@@ -1,0 +1,81 @@
+Question : 
+
+On a cold winter evening by the riverbank, a mysterious boatman offers a challenge as part of the New Year festivities. He presents two strings: one is the "key string," and the other is the "river stream." The challenge is to determine whether the key string is a subsequence of the river stream.
+
+A subsequence is formed by deleting some (or none) of the characters from the river stream without changing the relative order of the remaining characters. If the key string can be formed this way, the boatman reveals a hidden New Year message. Otherwise, the message remains a mystery.
+
+Can you help the participants determine if the key string unlocks the secret message?
+
+Input Format
+
+The first line contains T, the number of test cases. For each test case: The first line contains a string s, the key string. The second line contains a string t, the river stream. Constraints
+
+0≤s.length≤100 0≤t.length≤10^4 s and t consist only of lowercase English letters. Output Format
+
+For each test case, output "true" if s is a subsequence of t and "false" otherwise. Sample Input 0
+
+2
+abc
+ahbgdc
+axc
+ahbgdc Sample Output 0
+
+true
+false Explanation 0
+
+Test Case 1: The key string s="abc" can be obtained from the river stream t="ahbgdc" by deleting h,g and d, while keeping a,b and c in their relative positions. Thus, the output is "true".
+
+Test Case 2: The key string s="axc" cannot be obtained from t="ahbgdc" because the characters a and c are in the correct order, but x is not present in t. Thus, the output is "false". 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE: 
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+
+
+
+bool isSubsequence(const string& s, const string& t) {
+    int sLength = s.length();
+    int tLength = t.length();
+    
+    int i = 0, j = 0; // Pointers for s and t
+
+    while (i < sLength && j < tLength) {
+        if (s[i] == t[j]) {
+            i++; // Move pointer in s if characters match
+        }
+        j++; // Always move pointer in t
+    }
+
+    // If we have traversed all characters in s, it is a subsequence
+    return i == sLength;
+}
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+
+    while (T--) {
+        string s, t;
+        cin >> s >> t; // Read key string and river stream
+
+        // Check if s is a subsequence of t
+        if (isSubsequence(s, t)) {
+            cout << "true" << endl;
+        } else {
+            cout << "false" << endl;
+        }
+    }
+
+  
+    return 0;
+}
