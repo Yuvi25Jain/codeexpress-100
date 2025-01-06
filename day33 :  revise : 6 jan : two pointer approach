@@ -1,0 +1,92 @@
+Question : 
+
+ A row of lanterns, each labeled with a number, is lined up along the riverbank in non-decreasing order of their brightness. The challenge is to identify two lanterns such that the sum of their brightness matches a specific target.
+
+Participants must return the indices of the two lanterns, index1 and index2, added by one (if indexing is from 0) as an integer array [index1,index2] of length 2.
+
+The tests are generated such that there is exactly one solution. You may not use the same lantern (element) twice.
+
+Your solution must use only constant extra space. Can you help the festival-goers solve this puzzle?
+
+Input Format
+
+The first line contains T, the number of test cases. For each test case: The first line contains an integer n, the number of lanterns. The second line contains n integers, representing the brightness levels of the lanterns (sorted in non-decreasing order). The third line contains an integer target, the desired brightness sum. Constraints
+
+2≤n≤3×10^4 −1000≤numbers[i]≤1000 −1000≤target≤1000 The tests are generated such that there is exactly one solution. You may not use the same lantern (element) twice. Output Format
+
+For each test case, output a single line containing two integers, index1 and index2, representing the 1-based indices of the two lanterns that add up to the target.
+
+Sample Input
+
+3
+4
+2 7 11 15
+9
+3
+2 3 4
+6
+2
+-1 0
+-1 Sample Output
+
+1 2
+1 3
+1 2 Explanation
+
+Test Case 1: The lanterns have brightness levels [2,7,11,15]]. The sum of lanterns at indices 1 and 2 (2+7=9) equals the target brightness of 9. Thus, the output is 1 2.
+
+Test Case 2: The lanterns have brightness levels [2,3,4]. The sum of lanterns at indices 1 and 3 (2+4=6) equals the target brightness of 6. Thus, the output is 1 3.
+
+Test Case 3: The lanterns have brightness levels [−1,0]. The sum of lanterns at indices 1 and 2 (−1+0=−1) equals the target brightness of -1. Thus, the output is 1 2
+
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  CODE/EXPLAIN : 
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+
+int main() {
+    int T; // Number of test cases
+    cin >> T; // Read the number of test cases
+
+    while (T--) { // Loop through each test case
+        int n; // Number of lanterns
+        cin >> n; // Read the number of lanterns
+
+        vector<int> lanterns(n); // Create a vector to store brightness levels
+        for (int i = 0; i < n; i++) {
+            cin >> lanterns[i]; // Read the brightness levels
+        }
+
+        int target; // Desired brightness sum
+        cin >> target; // Read the target sum
+
+        int left = 0; // Initialize left pointer
+        int right = n - 1; // Initialize right pointer
+
+        while (left < right) { // Continue until the two pointers meet
+            int currentSum = lanterns[left] + lanterns[right]; // Calculate the sum of the two pointers
+            if (currentSum == target) { // Check if the sum matches the target
+                // Output the indices (1-based)
+                cout << left + 1 << " " << right + 1 << endl; 
+                break; // Exit the loop since we found the solution
+            } else if (currentSum < target) { // If the sum is less than the target
+                left++; // Move the left pointer to the right to increase the sum
+            } else { // If the sum is greater than the target
+                right--; // Move the right pointer to the left to decrease the sum
+            }
+        }
+    }
+
+    
+    return 0;
+}
