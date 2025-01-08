@@ -1,0 +1,106 @@
+The villagers are preparing for a grand festival by setting up a feast by the riverside. To ensure harmony, they plan to serve dishes in perfect pairs. Each pair of dishes must have a combined taste level equal to a specific value, k. Once a pair is served, it is removed from the available dishes.
+
+The villagers want to maximize the number of pairs they can serve. Can you help them determine the maximum number of pairs they can form?
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+For each test case:
+The first line contains two integers n (the number of dishes) and k(the required taste level for a pair).
+The second line contains n integers, representing the taste levels of the dishes.
+Constraints
+
+1≤T≤100
+1≤n≤10^5
+1≤taste[i]≤10^9
+1≤k≤10^9
+Output Format
+
+For each test case, output a single integer, representing the maximum number of pairs that can be formed. Output 0 if there is no such valid pairs.
+
+Sample Input 0
+
+2  
+4 5  
+1 2 3 4  
+5 6  
+3 1 3 4 3
+Sample Output 0
+
+2  
+1
+Explanation 0
+
+Test Case 1: The array is [1,2,3,4] and k=5. Pair (1,4) sums to 5, remove these numbers. Pair (2,3) also sums to 5, remove these numbers. No more pairs can be formed. The total number of pairs is 2.
+
+Test Case 2: The array is [3,1,3,4,3] and k=6. Pair (3,3) sums to 6, remove these numbers. No other pairs can sum to 6. The total number of pairs is 1.
+
+
+
+  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE/ EXPLANATION: 
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+using namespace std;
+
+
+
+
+int maxPairs(vector<int>& dishes, int k) {
+    unordered_map<int, int> count;
+    int pairs = 0;
+
+    // Count occurrences of each taste level
+    for (int taste : dishes) {
+        count[taste]++;
+    }
+
+    // Iterate through the unique taste levels
+    for (auto& entry : count) {
+        int taste = entry.first;
+        int complement = k - taste;
+
+        // If the complement is the same as the taste level
+        if (taste == complement) {
+            // We can form pairs from the same taste level
+            pairs += count[taste] / 2;
+        } else if (count.find(complement) != count.end()) {
+            // Form pairs with the complement
+            pairs += min(count[taste], count[complement]);
+        }
+
+        // Remove the counted pairs to avoid double counting
+        count[taste] = 0; // Mark as processed
+        count[complement] = 0; // Mark as processed
+    }
+
+    return pairs;
+}
+
+int main() {
+    int T;
+    cin >> T; // Number of test cases
+
+    while (T--) {
+        int n, k;
+        cin >> n >> k; // Number of dishes and required taste level
+
+        vector<int> dishes(n);
+        for (int i = 0; i < n; i++) {
+            cin >> dishes[i]; // Taste levels of the dishes
+        }
+
+        cout << maxPairs(dishes, k) << endl; // Output the result for each test case
+    }
+
+ 
+    return 0;
+}
