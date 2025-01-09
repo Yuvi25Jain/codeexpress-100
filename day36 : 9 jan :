@@ -1,0 +1,86 @@
+Question :
+
+Long ago, in the sun-scorched sands of Egypt, a legendary Pharaoh sealed away unimaginable wealth in a labyrinth of treasure chests, each hidden deep within his pyramid. Explorers from around the world have ventured into this mysterious pyramid, but none have returned with the Pharaoh's ultimate treasure.
+
+The legend speaks of an enchanted artifact capable of determining the most abundant collection of gold coins in sequential treasure chests.
+
+The artifact can slide across the sequence of chests, capturing coins from a specific number of consecutive chests (denoted as 𝑘).
+
+As an adventurer seeking fame and fortune, your task is to utilize the artifact to determine the maximum amount of gold you can gather from any contiguous group of 𝑘 treasure chests.
+
+Input Format
+
+The first line will denote the number of test cases, T.
+An integer n repreenting the number of chests.
+An array gold of size n, where each element represents gold coins in a chest.
+An integer k representing the size of the sliding window.
+Constraints
+
+1 ≤ n ≤ 10^5
+1 ≤ k ≤ n
+0 ≤ gold[i] ≤ 10^9
+Output Format
+
+An integer representing the maximum amount of gold.
+
+Sample Input 0
+
+1
+5
+1 2 3 4 5
+2
+Sample Output 0
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+code: 
+
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+
+int main() {
+    int T; // Number of test cases
+    cin >> T;
+
+    while (T--) {
+        int n; // Number of chests
+        cin >> n;
+
+        vector<int> gold(n); // Array to store gold coins in each chest
+        for (int i = 0; i < n; ++i) {
+            cin >> gold[i];
+        }
+
+        int k; // Size of the sliding window
+        cin >> k;
+
+        // Calculate the maximum sum of any contiguous subarray of size k
+        int maxGold = 0;
+        int currentSum = 0;
+
+        // Calculate the sum of the first 'k' elements
+        for (int i = 0; i < k; ++i) {
+            currentSum += gold[i];
+        }
+        maxGold = currentSum;
+
+        // Slide the window across the array
+        for (int i = k; i < n; ++i) {
+            currentSum += gold[i] - gold[i - k]; // Add the next element and remove the first element of the previous window
+            maxGold = max(maxGold, currentSum); // Update maxGold if currentSum is greater
+        }
+
+        cout << maxGold << endl; // Output the maximum amount of gold
+    }
+
+ 
+    return 0;
+}
+
+
+9
