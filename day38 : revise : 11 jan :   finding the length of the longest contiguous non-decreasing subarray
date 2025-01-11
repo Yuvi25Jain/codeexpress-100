@@ -1,0 +1,86 @@
+Question :
+
+The Nile River flows through different points, each with varying water flow rates. You are tasked with analyzing the flow rates represented as an array of integers. Your objective is to determine the longest contiguous subarray where the flow does not decrease, i.e., each subsequent element in the subarray is greater than or equal to the previous element.
+
+Given an array representing water flow at different points along the Nile, find the length of the longest contiguous subarray where the flow rates are non-decreasing. If there is a tie between subarrays of the same length, the specific subarray does not matter as we are only concerned with the length.
+
+Input Format
+
+The first line contains an integer t, representing the number of test cases.
+For each test case:
+The first line contains an integer n, representing the number of points along the Nile.
+The second line contains an array flow of size n, where each element represents water flow at a point.
+Constraints
+
+1≤t≤100
+1≤n≤10^5
+0≤flow[i]≤10^8
+The total number of array elements across all test cases does not exceed 10^6
+Output Format
+
+For each test case, output a single integer representing the length of the longest non-decreasing subarray.
+
+Sample Input 0
+
+2  
+4  
+1 2 3 4  
+3  
+2 1 0  
+Sample Output 0
+
+4
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE: 
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+
+int longestNonDecreasingSubarray(const vector<int>& flow) {
+    int maxLength = 1; // At least one element is always non-decreasing
+    int currentLength = 1;
+
+    for (size_t i = 1; i < flow.size(); ++i) {
+        if (flow[i] >= flow[i - 1]) {
+            currentLength++;
+        } else {
+            maxLength = max(maxLength, currentLength);
+            currentLength = 1; // Reset for the next subarray
+        }
+    }
+    
+    // Final check to update maxLength in case the longest subarray ends at the last element
+    maxLength = max(maxLength, currentLength);
+    
+    return maxLength;
+}
+
+int main() {
+    int t;
+    cin >> t; // Number of test cases
+    while (t--) {
+        int n;
+        cin >> n; // Number of points along the Nile
+        vector<int> flow(n);
+        
+        for (int i = 0; i < n; ++i) {
+            cin >> flow[i]; // Input the flow rates
+        }
+        
+        cout << longestNonDecreasingSubarray(flow) << endl; // Output the result for the test case
+    }
+  
+    return 0;
+}
+
+
+1  
