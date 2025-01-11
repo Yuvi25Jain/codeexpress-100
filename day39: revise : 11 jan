@@ -1,0 +1,90 @@
+Question :
+You are an explorer traveling through a desert. Along the way, you come across a list of oases and mirages, represented as numbers in a list called nums. Some of the numbers represent oases (odd numbers), and others represent mirages (even numbers).
+
+A path through the desert is defined as a continuous sequence of numbers from the list. A path is called pleasant if it contains exactly 𝑘 oases.
+
+Your goal is to determine how many pleasant paths exist in the desert for each test case.
+
+Input Format
+
+The first line will give 𝑇, the number of test cases.
+The first line of each test case will give 𝑛 (the number of locations) and 𝑘(the required number of oases).
+The second line of each test case will contain 𝑛 integers representing the list 𝑛𝑢𝑚𝑠, where each number is either an oasis (odd) or a mirage (even).
+Constraints
+
+1<=T<=1000
+1<=K<=N<=50,000
+1 <= nums[i] <= 100,000
+Output Format
+
+For each test case, print the number of pleasant paths in the desert.
+
+Sample Input 0
+
+1
+5 3
+1 1 2 1 1
+Sample Output 0
+
+2
+Explanation 0
+
+The only pleasant paths with 3 oases are:
+
+Path from indices [1,1,2,1]. Path from indices [1,2,1,1].
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  CODE:
+
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+using namespace std;
+
+
+int countPleasantPaths(const vector<int>& nums, int k) {
+    int n = nums.size();
+    int count = 0;
+    int oasisCount = 0;
+    unordered_map<int, int> prefixCount; // To count occurrences of oasis counts
+    prefixCount[0] = 1; // Base case: one way to have zero oases
+
+    for (int i = 0; i < n; i++) {
+        // Count the number of oases (odd numbers)
+        if (nums[i] % 2 != 0) {
+            oasisCount++;
+        }
+
+        // Check if there exists a prefix with (oasisCount - k)
+        if (prefixCount.find(oasisCount - k) != prefixCount.end()) {
+            count += prefixCount[oasisCount - k];
+        }
+
+        // Update the prefix count for the current oasis count
+        prefixCount[oasisCount]++;
+    }
+
+    return count;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int n, k;
+        cin >> n >> k;
+        vector<int> nums(n);
+        for (int i = 0; i < n; i++) {
+            cin >> nums[i];
+        }
+        cout << countPleasantPaths(nums, k) << endl;
+    }
+    return 0;
+}
