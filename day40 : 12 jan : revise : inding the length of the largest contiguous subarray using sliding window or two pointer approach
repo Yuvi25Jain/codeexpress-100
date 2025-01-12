@@ -1,0 +1,90 @@
+Question : 
+
+
+In a vast desert, there are rare oases where water and life thrive. Representing the desert as an array of integers where each element indicates the availability of water at a point, your task is to find the largest oasis. The largest oasis is defined as the longest contiguous subarray where the sum of elements exceeds or equals a given threshold T.
+
+This problem helps identify patterns in contiguous data, akin to finding regions of interest in a sparse dataset.
+
+Given an array representing water availability at different points in the desert, determine the length of the largest contiguous subarray where the sum of elements is at least T. If no such subarray exists, return -1.
+
+Input Format
+
+The first line contains an integer t, representing the number of test cases.
+For each test case:
+The first line contains an integer n, representing the number of points in the desert.
+The second line contains an array water of size n, where each element represents water availability at a point.
+The third line contains an integer T, the threshold for an oasis.
+Constraints
+
+1≤t≤100
+1≤n≤10^5
+0≤water[i]≤10^9
+1≤T≤10^18
+The total number of array elements across all test cases does not exceed 10^6.
+Output Format
+
+For each test case, output a single integer representing the length of the largest contiguous subarray where the sum of elements is at least T, or -1 if no such subarray exists.
+
+Sample Input 0
+
+2  
+6  
+3 2 1 4 5 2  
+8  
+5  
+1 2 3 4 5  
+10  
+Sample Output 0
+
+3  
+4  
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int largestOasisLength(const vector<int>& water, long long T) {
+    int n = water.size();
+    int maxLength = -1;
+    long long currentSum = 0;
+    int left = 0;
+
+    for (int right = 0; right < n; ++right) {
+        currentSum += water[right];
+
+        // Check if the current sum is at least T
+        while (currentSum >= T) {
+            // Update maxLength if the current window is larger
+            maxLength = max(maxLength, right - left + 1);
+            // Shrink the window from the left
+            currentSum -= water[left];
+            left++;
+        }
+    }
+
+    return maxLength;
+}
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        vector<int> water(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> water[i];
+        }
+        long long T;
+        cin >> T;
+
+        int result = largestOasisLength(water, T);
+        cout << result << endl;
+    }
+    return 0;
+}
+  
