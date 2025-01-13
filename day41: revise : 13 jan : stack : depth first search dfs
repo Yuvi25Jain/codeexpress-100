@@ -1,0 +1,109 @@
+Question : 
+
+The city is hosting a festival, and roads connecting intersections are decorated with lights. Starting at intersection 1, find all possible paths to the last intersection n without visiting any intersection more than once.
+
+Given a number of intersections n and a list of roads represented as edges between intersections, your task is to determine all paths from intersection 1 to intersection n, such that each intersection is visited at most once.
+
+Input Format
+
+An integer t representing the number of test cases.
+For each test case:
+An integer n, the number of intersections.
+An integer m, the number of edges.
+m lines, each containing two integers u and v, representing a road between intersections u and v.
+Constraints
+
+1≤t≤10
+2≤n≤15
+1≤m≤50
+Output Format
+
+For each test case, output a list of all possible paths as lists of integers, one per line for each test case.
+
+Sample Input 0
+
+1  
+5  
+5  
+1 2  
+2 5  
+1 3  
+3 4  
+4 5  
+Sample Output 0
+
+1 2 5 
+1 3 4 5 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CODE: 
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+#include <set>
+using namespace std;
+void dfs(int current, int n, vector<int>& path, vector<vector<int>>& result, const unordered_map<int, set<int>>& graph, vector<bool>& visited) {
+    // Mark the current intersection as visited
+    visited[current] = true;
+    path.push_back(current);
+
+    // If we reached the last intersection, add the path to the result
+    if (current == n) {
+        result.push_back(path);
+    } else {
+        // Explore all connected intersections
+        for (int neighbor : graph.at(current)) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, n, path, result, graph, visited);
+            }
+        }
+    }
+
+    // Backtrack: unmark the current intersection and remove it from the path
+    visited[current] = false;
+    path.pop_back();
+}
+
+int main() {
+    int t;
+    cin >> t; // Number of test cases
+
+    while (t--) {
+        int n, m;
+        cin >> n >> m; // Number of intersections and edges
+
+        unordered_map<int, set<int>> graph;
+
+        // Read edges and build the graph
+        for (int i = 0; i < m; i++) {
+            int u, v;
+            cin >> u >> v;
+            graph[u].insert(v);
+            graph[v].insert(u); // Since the roads are bidirectional
+        }
+
+        vector<vector<int>> result;
+        vector<int> path;
+        vector<bool> visited(n + 1, false); // To keep track of visited intersections
+
+        // Start DFS from intersection 1
+        dfs(1, n, path, result, graph, visited);
+
+        // Output the results
+        for (const auto& p : result) {
+            for (int intersection : p) {
+                cout << intersection << " ";
+            }
+            cout << endl;
+        }
+    }
+
+  
+    return 0;
+}
