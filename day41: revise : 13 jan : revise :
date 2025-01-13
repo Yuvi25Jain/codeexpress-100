@@ -1,0 +1,79 @@
+Question : 
+
+As part of the organizing team for Prayatna 2.0, you have been tasked with ensuring the smooth formation of teams for the hackathon. Each team must consist of exactly 4 participants, with the following conditions:
+
+Inclusivity: Every team must include at least one female member. Exclusivity: No participant can be a part of more than one team. Given a list of participants and their genders, your goal is to calculate the maximum number of valid teams that can be formed. This will ensure fairness and inclusivity while maintaining the excitement and spirit of Prayatna 2.0 .
+
+Can you take on this challenge and help us kick off Prayatna 2.0 with perfectly balanced teams?
+
+Input Format
+
+The first line contains an integer t, the number of test cases. For each test case: The first line contains an integer n, the total number of participants. The second line contains a string of length n, where each character represents the gender of a participant ('M' for male, 'F' for female).
+
+Constraints
+
+1≤t≤100 1≤n≤10^5 The total number of participants across all test cases does not exceed 10^6 Output Format
+
+For each test case, output a single integer representing the maximum number of valid teams that can be formed.
+
+Sample Input 0
+
+2
+6
+MMFMFM
+5
+FFFFM
+Sample Output 0
+
+1
+1
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE: 
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int main() {
+    int t;
+    cin >> t; // Number of test cases
+
+    while (t--) {
+        int n;
+        cin >> n; // Number of participants
+        string genders;
+        cin >> genders; // Gender string
+
+        int maleCount = 0, femaleCount = 0;
+
+        // Count males and females
+        for (char gender : genders) {
+            if (gender == 'M') {
+                maleCount++;
+            } else if (gender == 'F') {
+                femaleCount++;
+            }
+        }
+
+        // Calculate the maximum number of teams
+        int maxTeamsByParticipants = n / 4; // Total participants divided by 4
+        int maxTeamsByFemales = femaleCount; // At least one female per team
+
+        // The result is the minimum of the two
+        int maxTeams = min(maxTeamsByParticipants, maxTeamsByFemales);
+
+        cout << maxTeams << endl; // Output the result for the test case
+    }
+
+ 
+    return 0;
+}
