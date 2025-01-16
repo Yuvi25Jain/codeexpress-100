@@ -1,0 +1,106 @@
+Question :
+
+
+A thief is trapped in a maze of city streets represented as an n × n grid. Each cell in the grid represents either a blocked street (1) or an open street (0). The thief starts at the top-left corner of the grid (position[0][0]) and needs to escape to the bottom-right corner of the grid (position [n−1][n−1]). The thief can only move up, down, left, or right.
+
+Your task is to determine whether the thief can escape the maze.
+
+Input Format
+
+An integer t, the number of test cases. For each test case: An integer n, the size of the grid. A 2D array grid of size n×n, where: grid[i][j]=1: Blocked street. grid[i][j]=0: Open street.
+
+Constraints
+
+1≤t≤10 1≤n≤20 grid[0][0]=0 (Top-left is always open). grid[n−1][n−1]=0 (Bottom-right is always open).
+
+Output Format
+
+For each test case, print "YES" if the thief can escape; otherwise, print "NO".
+
+Sample Input 0
+
+1  
+3  
+0 0 1  
+1 0 1  
+1 0 0  
+Sample Output 0
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------444
+
+
+  CODE: 
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+bool canEscape(vector<vector<int>>& grid, int x, int y, int n, vector<vector<bool>>& visited) {
+    // Base case: if we reach the bottom-right corner
+    if (x == n - 1 && y == n - 1) {
+        return true;
+    }
+
+    // Directions for moving up, down, left, right
+    int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    // Mark the current cell as visited
+    visited[x][y] = true;
+
+    // Explore all possible directions
+    for (auto& dir : directions) {
+        int newX = x + dir[0];
+        int newY = y + dir[1];
+
+        // Check if the new position is within bounds, not blocked, and not visited
+        if (newX >= 0 && newX < n && newY >= 0 && newY < n && 
+            grid[newX][newY] == 0 && !visited[newX][newY]) {
+            // Recursively try to escape from the new position
+            if (canEscape(grid, newX, newY, n, visited)) {
+                return true;
+            }
+        }
+    }
+
+    // Backtrack: unmark the current cell
+    visited[x][y] = false;
+    return false;
+}
+
+int main() {
+    int t;
+    cin >> t; // Number of test cases
+
+    while (t--) {
+        int n;
+        cin >> n; // Size of the grid
+        vector<vector<int>> grid(n, vector<int>(n));
+        
+        // Input the grid
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                cin >> grid[i][j];
+            }
+        }
+
+        // Create a visited array to keep track of visited cells
+        vector<vector<bool>> visited(n, vector<bool>(n, false));
+
+        // Start DFS from the top-left corner
+        if (canEscape(grid, 0, 0, n, visited)) {
+            cout << "YES" << endl;
+        } else {
+            cout << "NO" << endl;
+        }
+    }
+
+  
+    return 0;
+}
+
+
+YES 
