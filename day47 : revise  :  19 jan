@@ -1,0 +1,88 @@
+Question :
+
+The city’s transportation department has a system to track daily taxi fares. Fares are recorded in sorted order to analyze trends. A curious journalist is trying to find a specific fare amount from the records to check if it matches the rumored fare spike from last week.
+
+Help the journalist find the fare in the records. Return the position of the fare if it exists or -1 if it doesn’t.
+
+Input Format
+
+An integer t, the number of test cases.
+For each test case:
+An integer n, representing the number of fares recorded.
+A sorted list of integers fares, of size n, representing the fare amounts in increasing order.
+An integer query, representing the fare amount the journalist is searching for.
+Constraints
+
+1≤t≤10
+1≤n≤2×10^5
+1≤fares[i]≤10^9
+1≤query≤10^9
+Output Format
+
+For each test case, output a single integer representing the 0-based index of the queried fare amount if found, otherwise -1.
+
+Sample Input 0
+
+1  
+8  
+50 75 100 150 200 250 300 350  
+200  
+Sample Output 0
+
+4
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// Function to perform binary search
+int binarySearch(const vector<int>& fares, int query) {
+    int left = 0;
+    int right = fares.size() - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+
+        if (fares[mid] == query) {
+            return mid; // Return the index if found
+        } else if (fares[mid] < query) {
+            left = mid + 1; // Search in the right half
+        } else {
+            right = mid - 1; // Search in the left half
+        }
+    }
+    return -1; // Return -1 if not found
+}
+
+int main() {
+    int t;
+    cin >> t; // Number of test cases
+
+    while (t--) {
+        int n;
+        cin >> n; // Number of fares recorded
+        vector<int> fares(n);
+
+        for (int i = 0; i < n; ++i) {
+            cin >> fares[i]; // Input the fare amounts
+        }
+
+        int query;
+        cin >> query; // Fare amount to search for
+
+        // Perform binary search and output the result
+        int result = binarySearch(fares, query);
+        cout << result << endl;
+    }
+
+ 
+    return 0;
+}
