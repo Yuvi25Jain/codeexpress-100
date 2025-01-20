@@ -1,0 +1,74 @@
+Question :
+
+The city is hosting a skyline competition where the heights of all skyscrapers are recorded in sorted order. A group of architects wants to know the position of a particular skyscraper’s height to analyze its design.
+
+Find the position of the given height in the list of skyscraper heights. If the height is not present, return -1.
+
+Input Format
+
+An integer t, the number of test cases. For each test case: An integer n, representing the number of skyscrapers. A sorted list of integers heights, of size n, representing the heights of skyscrapers. An integer desired_height, representing the skyscraper height to search for. Constraints
+
+1≤t≤10 1≤n≤10^6 1≤heights[i]≤10^9 1≤desired_height≤10^9
+
+Output Format
+
+For each test case, output a single integer representing the 0-based index of the desired height if found, otherwise -1.
+
+Sample Input 0
+
+1
+5
+100 200 300 400 500
+300
+Sample Output 0
+
+2 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+int findSkyscraperHeightPosition(const vector<int>& heights, int desired_height) {
+    // Use lower_bound to find the first position where desired_height could be inserted
+    auto it = lower_bound(heights.begin(), heights.end(), desired_height);
+    
+    // Check if the found position is within bounds and matches the desired height
+    if (it != heights.end() && *it == desired_height) {
+        return it - heights.begin(); // Return the index
+    }
+    
+    return -1; // Not found
+}
+
+int main() {
+    int t;
+    cin >> t; // Read number of test cases
+
+    while (t--) {
+        int n;
+        cin >> n; // Read number of skyscrapers
+        vector<int> heights(n);
+        
+        for (int i = 0; i < n; ++i) {
+            cin >> heights[i]; // Read heights
+        }
+        
+        int desired_height;
+        cin >> desired_height; // Read the desired height
+        
+        // Find and print the position of the desired height
+        cout << findSkyscraperHeightPosition(heights, desired_height) << endl;
+    }
+
+ 
+    return 0;
+}
