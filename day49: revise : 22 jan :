@@ -1,0 +1,74 @@
+Question:
+
+
+The city’s subway system is expanding, and engineers need to ensure that tunnels meet specific clearance heights for trains to pass safely. Tunnel clearances are listed in increasing order. A train engineer wants to know if a train with a specific height can safely pass through a tunnel.
+
+Given the list of tunnel clearances and the height of the train, determine the smallest clearance that is greater than or equal to the train's height. If no such tunnel exists, return -1.
+
+Input Format
+
+An integer t, the number of test cases.
+For each test case:
+An integer n, representing the number of tunnels.
+A sorted list of integers clearances, of size n, representing tunnel clearances.
+An integer train_height, representing the height of the train.
+Constraints
+
+1≤t≤10 1≤n≤10^5 1≤clearances[i]≤10^9 1≤train_height≤10^9
+
+Output Format
+
+For each test case, output a single integer representing the smallest tunnel clearance greater than or equal to the train's height if it exists, otherwise -1.
+
+Sample Input 0
+
+1  
+5  
+100 200 300 400 500  
+250  
+Sample Output 0
+
+300  
+
+
+  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int t; // number of test cases
+    cin >> t;
+
+    while (t--) {
+        int n; // number of tunnels
+        cin >> n;
+
+        vector<int> clearances(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> clearances[i];
+        }
+
+        int train_height;
+        cin >> train_height;
+
+        // Use lower_bound to find the first clearance that is >= train_height
+        auto it = lower_bound(clearances.begin(), clearances.end(), train_height);
+
+        // Check if we found a valid clearance
+        if (it != clearances.end()) {
+            cout << *it << endl; // Output the found clearance
+        } else {
+            cout << -1 << endl; // No valid clearance found
+        }
+    }
+  
+    return 0;
+}
