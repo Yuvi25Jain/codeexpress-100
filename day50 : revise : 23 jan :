@@ -1,0 +1,96 @@
+Question :
+
+
+our quirk, "Skyline Balance," allows you to limit the maximum height of buildings in any neighborhood. However, there is a restriction: you can only reduce the heights of buildings that exceed a certain value to be equal to that value.
+
+One day, the mayor gives you a challenge: you are given an array representing the heights of buildings in a neighborhood and a target total height that the city council wants to achieve. Using your quirk, you must adjust the skyline to make the total building height as close as possible to the target. If there are multiple solutions, you must choose the smallest height limit that achieves this.
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+The first line of each test case contains two integers n and target, representing the number of buildings and the desired total height of all buildings in the neighborhood.
+The second line of each test case contains n integers representing the heights of the buildings.
+Constraints
+
+1 <= n <= 10^4
+1<=T<=1000
+1 <= height[i], target <= 10^5
+Output Format
+
+For each test case, print the height limit you should set to make the total height as close as possible to the target.
+
+Sample Input 0
+
+1  
+3 10  
+4 9 3
+Sample Output 0
+
+3
+Explanation 0
+
+If we set a height limit of 3, the skyline becomes [3, 3, 3], summing to 9, which is the closest possible total to the target.
+
+
+-----------------------------------------------------------------------------------------------
+
+  CODE:
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <limits>
+
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+    
+    while (T--) {
+        int n, target;
+        cin >> n >> target;
+        
+        vector<int> heights(n);
+        int max_height = 0;
+        
+        for (int i = 0; i < n; ++i) {
+            cin >> heights[i];
+            max_height = max(max_height, heights[i]);
+        }
+        
+        int left = 1, right = max_height;
+        int best_limit = 1;
+        long long min_diff = LLONG_MAX; // Use long long for large sums
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            long long total_height = 0;
+            
+            for (int height : heights) {
+                total_height += min(height, mid);
+            }
+            
+            long long diff = abs(total_height - target);
+            
+            // Update the best limit if we found a closer total or a smaller limit with the same diff
+            if (diff < min_diff || (diff == min_diff && mid < best_limit)) {
+                min_diff = diff;
+                best_limit = mid;
+            }
+            
+            // Adjust the binary search bounds
+            if (total_height < target) {
+                left = mid + 1; // Increase the limit to try to increase total height
+            } else {
+                right = mid - 1; // Decrease the limit to try to decrease total height
+            }
+        }
+        
+        cout << best_limit << endl;
+    }
+    
+    return 0;
+}
