@@ -1,0 +1,113 @@
+Question :
+
+Shinchan and Aichan take turns playing a game, with Shinchan starting first.
+
+You are given a string num of even length consisting of digits and '?' characters. On each turn, a player will do the following if there is still at least one '?' in num:
+
+Choose an index i where num[i] == '?'.
+Replace num[i] with any digit between '0' and '9'.
+The game ends when there are no more '?' characters in num.
+For Aichan to win, the sum of the digits in the first half of num must be equal to the sum of the digits in the second half. For Shinchan to win, the sums must not be equal.
+
+For example, if the game ended with num = "243801", then Aichan wins because 2+4+3 = 8+0+1. If the game ended with num = "243803", then Shinchan wins because 2+4+3 != 8+0+3. Assuming Shinchan and Aichan play optimally, Print Shinchan if Shinchan will win and Aichan if Aichan will win.
+
+Input Format
+
+The first line will give T, the number of testcases.
+Each testcase will give a string num.
+Constraints
+
+1<=T<=1000
+2 <= num.length <= 10^5
+num.length is even.
+num consists of only digits and '?'.
+Output Format
+
+For each testcase print Shinchan if Shinchan will win and Aichan if Aichan will win.
+
+Sample Input 0
+
+1
+5023
+Sample Output 0
+
+Aichan
+Explanation 0
+
+There are no moves to be made. The sum of the first half is equal to the sum of the second half: 5 + 0 = 2 + 3.
+
+Sample Input 1
+
+1
+25??
+Sample Output 1
+
+Shinchan
+Sample Input 2
+
+1
+?3295???
+Sample Output 2
+
+Aichan
+Explanation 2
+
+It can be proven that Aichan will always win. One possible outcome is:
+
+Shinchan replaces the first '?' with '9'. num = "93295???".
+Aichan replaces one of the '?' in the right half with '9'. num = "932959??".
+Shinchan replaces one of the '?' in the right half with '2'. num = "9329592?".
+Aichan replaces the last '?' in the right half with '7'. num = "93295927".
+Aichan wins because 9 + 3 + 2 + 9 = 5 + 9 + 2 + 7.
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CODE: 
+#include <iostream>
+#include <string>
+using namespace std;
+
+void determine_winner(const string& num) {
+    int n = num.length();
+    int sum1 = 0, sum2 = 0;
+    int count1 = 0, count2 = 0;
+
+    // Calculate sums and counts of '?' in both halves
+    for (int i = 0; i < n / 2; ++i) {
+        if (num[i] == '?') {
+            count1++;
+        } else {
+            sum1 += num[i] - '0';
+        }
+    }
+    for (int i = n / 2; i < n; ++i) {
+        if (num[i] == '?') {
+            count2++;
+        } else {
+            sum2 += num[i] - '0';
+        }
+    }
+
+    // Calculate total '?' count
+    int total_questions = count1 + count2;
+
+    // Determine the winner based on the conditions
+    if (total_questions % 2 == 0) {
+        cout << "Aichan" << endl; // Aichan can always win
+    } else {
+        cout << "Shinchan" << endl; // Shinchan can force a win
+    }
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        string num;
+        cin >> num;
+        determine_winner(num);
+    }
+    return 0;
+}
