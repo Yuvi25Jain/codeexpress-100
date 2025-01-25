@@ -1,0 +1,54 @@
+Question :
+
+
+You and your teammate are playing a high-stakes Valorant match on Icebox. The enemy team has planted the Spike, and you need to defuse it before time runs out.
+
+There are n seconds left before the Spike detonates, and you get the first move. On each turn, you can defuse 1, 2, or 3 seconds of the Spike timer. The player who removes the last second defuses the Spike and wins the round for their team. Determine if you can secure the round assuming both you and your opponent play optimally. Print "Yes" if you can win the round, or "No" if your opponent will win.
+
+Input Format
+
+The first line will give T, the number of test cases. Each test case will give n, the number of seconds left on the Spike timer. Constraints
+
+1<=T<=1000 1 <= n <= 2^31 - 1 Output Format
+
+For each test case, print "Yes" if you can defuse the Spike and win the round, or "No" if your opponent will win.
+
+Sample Input 0
+
+1
+4 Sample Output 0
+
+No Explanation 0
+
+These are the possible outcomes:
+
+You defuse 1 second. The opponent defuses 3 seconds, including the last one. Opponent wins. You defuse 2 seconds. The opponent defuses 2 seconds, including the last one. Opponent wins. You defuse 3 seconds. The opponent defuses the last second. Opponent wins. Sample Input 1
+
+2 1 2 Sample Output 1
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Code : 
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+    while (T--) {
+        long long n;
+        cin >> n; // Read the number of seconds left on the Spike timer
+        // Check if n is a losing position
+        if (n % 4 == 0) {
+            cout << "No" << endl; // Opponent will win
+        } else {
+            cout << "Yes" << endl; // You can win
+        }
+    }
+    return 0;
+}
+
+Yes Yes 
