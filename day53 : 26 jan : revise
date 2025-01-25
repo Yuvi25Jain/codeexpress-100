@@ -1,0 +1,62 @@
+Question :
+
+Barbarian King and Archer Queen are engaged in a battle over an Elixir Storage. The storage contains N units of Elixir, and both players take alternate turns extracting Elixir. On each turn, a player can extract either 1 unit of Elixir or an amount equal to some prime power (𝑝^𝑥, where p is a prime number and x is a positive integer).The battle continues until the Elixir Storage is empty. The player who cannot extract Elixir on their turn loses the battle.
+
+Barbarian King goes first. Your task is to determine who will win the battle, assuming both players play optimally.
+
+Input Format
+
+The first line of the input contains an integer T, denoting the number of test cases.
+Each test case consists of a single integer N, representing the amount of Elixir in storage.
+Constraints
+
+1 ≤ T ≤ 1000
+1 ≤ N ≤ 10^9
+Output Format
+
+For each test case, output a single line containing one word - the name of the winner. Print "BarbarianKing" (without quotes) if Barbarian King wins the battle. Print "ArcherQueen" (without quotes) otherwise.
+
+Sample Input 0
+
+2
+1
+8
+Sample Output 0
+
+  -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Code :
+
+
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+    
+    while (T--) {
+        long long N;
+        cin >> N;
+
+        // Determine the winner based on whether N is odd or even
+        if (N % 3 == 0) {
+            cout << "ArcherQueen" << endl; // Even: Archer Queen wins
+        } else {
+            cout << "BarbarianKing" << endl; // Odd: Barbarian King wins
+        }
+    }
+
+    
+    return 0;
+}
+
+
+BarbarianKing
+BarbarianKing
