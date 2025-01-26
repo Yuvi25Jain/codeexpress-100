@@ -1,0 +1,82 @@
+Question : 
+
+Lakshya Sen and Kidambi Srikanth are competing in a high-stakes badminton match. The match is played with two shuttle reserves, numbered 1 and 2. Shuttle Reserve 1 contains X shuttlecocks, while Shuttle Reserve 2 contains Y shuttlecocks.
+
+Lakshya Sen starts the game.
+
+On his turn, Lakshya can either:
+
+Take 1 shuttlecock from both reserves
+Take 2 shuttlecocks from Reserve 1
+On his turn, Kidambi can either:
+
+Take 1 shuttlecock from both reserves
+Take 2 shuttlecocks from Reserve 2
+The player who cannot make a move loses the match. Determine who will win if both players play optimally.
+
+Input Format
+
+The first line of input will contain a single integer T, denoting the number of test cases.
+Each test case consists of a single line containing two integers X and Y, representing the initial number of shuttlecocks in reserves 1 and 2, respectively.
+Constraints
+
+1≤T≤1000
+1≤X,Y≤10^9
+Output Format
+
+For each test case, output "Lakshya" if Lakshya Sen wins the game, and "Kidambi" otherwise.
+
+Sample Input 0
+
+1
+1 10
+Sample Output 0
+
+Kidambi
+Explanation 0
+
+Test Case 1:
+
+Lakshya removes 1 shuttlecock from both reserves. Reserve 1 is empty, while Reserve 2 has 9 shuttlecocks left.
+Kidambi removes 2 shuttlecocks from Reserve 2. Reserve 1 is still empty, and Reserve 2 has 7 shuttlecocks left.
+Since Lakshya cannot make a move, Kidambi wins.
+Test Case 2:
+
+Lakshya removes 1 shuttlecock from both reserves. Now, each reserve has 1 shuttlecock left.
+Kidambi removes 1 shuttlecock from both reserves, making both reserves empty.
+Since Lakshya cannot make a move, Kidambi wins.
+Test Case 3:
+
+Lakshya plays optimally and ensures he wins the match.
+
+---- -- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  Code : 
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        long long X, Y;
+        cin >> X >> Y;
+
+        // Determine the winner based on the analysis
+        if ((X % 2 == 0 && Y % 2 == 0) || (X % 2 == 1 && Y % 2 == 1)) {
+            cout << "Kidambi" << endl; // Kidambi wins if both are even or both are odd
+        } else {
+            cout << "Lakshya" << endl; // Lakshya wins if one is even and the other is odd
+        }
+    }
+    
+ 
+    return 0;
+}
