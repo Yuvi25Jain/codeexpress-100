@@ -1,0 +1,95 @@
+Question : 
+
+
+Mario and Luigi are in an intense battle playing Smash Kart Showdown. This unique game is played on N Kart Stations. Station i contains aᵢ power-ups.
+
+Like a traditional Smash Kart battle, Mario and Luigi take turns grabbing power-ups from any single station, but there's a twist:
+
+Mario can only take an even number of power-ups.
+Luigi can only take an odd number of power-ups.
+Since they are legendary kart racers with years of experience, they always play optimally to win the game. The player who cannot make a move loses.
+
+Peach doesn't want to wait until the battle ends, so she asks you to determine the winner.
+
+Input Format
+
+The first line of the input contains an integer T denoting the number of test cases.
+Each test case starts with an integer N (number of stations) and a string P (starting player).
+P is "Mario" if Mario goes first.
+P is "Luigi" if Luigi goes first.
+The next line contains N space-separated integers aᵢ (number of power-ups at station i).
+Constraints
+
+1 ≤ T ≤ 50
+1 ≤ N ≤ 50
+1 ≤ ai ≤ 50
+Output Format
+
+For each test case, print:
+
+"Mario" if Mario wins.
+"Luigi" otherwise.
+Sample Input 0
+
+1
+2 Mario
+2 2
+Sample Output 0
+
+Luigi
+Explanation 0
+
+Mario takes 2 power-ups from any one station, leaving one station with power-ups.
+Luigi then takes 1 power-up, making Mario unable to play.
+Luigi wins the battle.
+
+
+
+  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  CODE : getting one test case wrong
+  
+
+
+  #include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T; // Number of test cases
+
+    while (T--) {
+        int N;
+        string P;
+        cin >> N >> P; // Number of stations and starting player
+
+        vector<int> powerUps(N);
+        int totalPowerUps = 0;
+
+        for (int i = 0; i < N; ++i) {
+            cin >> powerUps[i];
+            totalPowerUps += powerUps[i]; // Calculate total power-ups
+        }
+
+        // Determine the winner based on the starting player and total power-ups
+        if (P == "Mario") {
+            // If Mario starts
+            if (totalPowerUps % 2 == 0) {
+                cout << "Luigi" << endl; // Mario leaves an odd total for Luigi
+            } else {
+                cout << "Mario" << endl; // Mario can take 1 power-up and leave an even total for Luigi
+            }
+        } else {
+            // If Luigi starts
+            if (totalPowerUps % 2 == 0) {
+                cout << "Mario" << endl; // Luigi leaves an odd total for Mario
+            } else {
+                cout << "Luigi" << endl; // Luigi can take 1 power-up and leave an even total for Mario
+            }
+        }
+    }
+
+    return 0;
+}
