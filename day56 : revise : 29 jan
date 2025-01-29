@@ -1,0 +1,110 @@
+Question  :
+
+You manage an electric vehicle (EV) charging station with three types of chargers: slow, medium, and fast. Each second, you can either charge two vehicles using different types of chargers or one vehicle using any single type of charger.
+
+You are given a 0-indexed integer array amount of length 3 where:
+
+amount[0] represents the number of vehicles needing a slow charger.
+amount[1] represents the number of vehicles needing a medium charger.
+amount[2] represents the number of vehicles needing a fast charger.
+Print the minimum number of seconds required to charge all the vehicles.
+
+Input Format
+
+The first line contains T, the number of test cases.
+Each test case consists of an integer array amount of length 3, where:
+amount[0] denotes the number of vehicles needing a slow charger.
+amount[1] denotes the number of vehicles needing a medium charger.
+amount[2] denotes the number of vehicles needing a fast charger.
+Constraints
+
+1 <= T <= 1000
+amount.length == 3
+0 <= amount[i] <= 100
+Output Format
+
+For each test case, print the minimum number of seconds required to charge all the vehicles.
+
+Sample Input 0
+
+1  
+1 4 2
+Sample Output 0
+
+4
+Explanation 0
+
+One way to charge the vehicles is:
+
+Second 1: Charge a vehicle with a slow charger and a medium charger.
+Second 2: Charge a vehicle with a medium charger and a fast charger.
+Second 3: Charge a vehicle with a medium charger and a fast charger.
+Second 4: Charge a vehicle with a medium charger.
+It can be proven that 4 is the minimum number of seconds needed.
+
+
+  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+  CODE:
+
+
+  #include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int minChargingTime(vector<int>& amount) {
+    int seconds = 0;
+
+    // Sort the array to always work with the largest counts first
+    sort(amount.begin(), amount.end());
+
+    while (amount[2] > 0 || amount[1] > 0 || amount[0] > 0) {
+        // If we can charge two different types
+        if (amount[2] > 0 && amount[1] > 0) {
+            amount[2]--;
+            amount[1]--;
+            seconds++;
+        } else if (amount[2] > 0 && amount[0] > 0) {
+            amount[2]--;
+            amount[0]--;
+            seconds++;
+        } else if (amount[1] > 0 && amount[0] > 0) {
+            amount[1]--;
+            amount[0]--;
+            seconds++;
+        } else {
+            // If we can't charge two different types, charge one vehicle
+            if (amount[2] > 0) {
+                amount[2]--;
+            } else if (amount[1] > 0) {
+                amount[1]--;
+            } else if (amount[0] > 0) {
+                amount[0]--;
+            }
+            seconds++;
+        }
+
+        // Re-sort the array to keep the largest counts at the end
+        sort(amount.begin(), amount.end());
+    }
+
+    return seconds;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        vector<int> amount(3);
+        cin >> amount[0] >> amount[1] >> amount[2];
+        cout << minChargingTime(amount) << endl;
+    }
+    return 0;
+}
+
+
+  
