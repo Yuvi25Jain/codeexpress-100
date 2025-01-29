@@ -1,0 +1,99 @@
+Question : 
+
+You are given a positive integer num. You may swap any two digits of num that have the same parity (i.e. both odd digits or both even digits).
+
+Print the largest possible value of num after any number of swaps.
+
+Input Format
+
+The first line will give T, the number of testcases.
+Each testcase will give the number num.
+Constraints
+
+1 <= T <= 1000
+1 <= num <= 10^9
+Output Format
+
+For each testcase print the largest possible value of num after any number of swaps.
+
+Sample Input 0
+
+1
+1234
+Sample Output 0
+
+3412
+Explanation 0
+
+Swap the digit 3 with the digit 1, this results in the number 3214.
+Swap the digit 2 with the digit 4, this results in the number 3412.
+Note that there may be other sequences of swaps but it can be shown that 3412 is the largest possible number.
+Also note that we may not swap the digit 4 with the digit 1 since they are of different parities.
+Sample Input 1
+
+1
+65875
+Sample Output 1
+
+87655
+Explanation 1
+
+Swap the digit 8 with the digit 6, this results in the number 85675.
+Swap the first digit 5 with the digit 7, this results in the number 87655.
+Note that there may be other sequences of swaps but it can be shown that 87655 is the largest possible number....
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  CODE:
+
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+string largestNumberAfterSwaps(int num) {
+    string strNum = to_string(num);
+    vector<char> oddDigits, evenDigits;
+
+    // Separate the digits into odd and even
+    for (char digit : strNum) {
+        if ((digit - '0') % 2 == 0) {
+            evenDigits.push_back(digit);
+        } else {
+            oddDigits.push_back(digit);
+        }
+    }
+
+    // Sort both vectors in descending order
+    sort(oddDigits.rbegin(), oddDigits.rend());
+    sort(evenDigits.rbegin(), evenDigits.rend());
+
+    // Reconstruct the largest number
+    string result;
+    int oddIndex = 0, evenIndex = 0;
+
+    for (char digit : strNum) {
+        if ((digit - '0') % 2 == 0) {
+            result += evenDigits[evenIndex++];
+        } else {
+            result += oddDigits[oddIndex++];
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+    while (T--) {
+        int num;
+        cin >> num; // Read the number for each test case
+        cout << largestNumberAfterSwaps(num) << endl; // Output the result
+    }
+ 
+    return 0;
+}
