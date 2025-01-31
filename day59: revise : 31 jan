@@ -1,0 +1,87 @@
+Question :
+
+
+Alex has a lawn with different grass heights. He needs to trim the grass until all parts of the lawn are even. However, he follows a special rule:
+
+In one turn, Alex cuts the smallest non-zero grass height from all uncut areas at the same time.
+He continues cutting until the entire lawn is trimmed to zero height.
+Can you help Alex find the minimum number of turns needed to fully mow the lawn?
+
+Input Format
+
+The first line contains T, the number of test cases.
+For each test case:
+The first line contains an integer n, the number of lawn patches.
+The second line contains n space-separated integers representing the grass height of each patch.
+Constraints
+
+1 <= T <= 1000
+1 <= n <= 10^5
+0 <= nums[i] <= 10^5
+Output Format
+
+For each test case, print the minimum number of turns needed to mow the lawn completely.
+
+Sample Input 0
+
+1
+5
+1 5 0 3 5
+Sample Output 0
+
+3
+Explanation 0
+
+First turn: Cut 1 unit from all grass patches → [0, 4, 0, 2, 4]
+Second turn: Cut 2 units → [0, 2, 0, 0, 2]
+Third turn: Cut 2 units → [0, 0, 0, 0, 0]
+Since the entire lawn is mowed, minimum turns = 3.
+
+Sample Input 1
+
+1
+1
+0
+Sample Output 1
+
+0
+Explanation 1
+
+The lawn is already fully trimmed, so no turns are needed!
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <set>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+
+    while (T--) {
+        int n;
+        cin >> n; // Read the number of lawn patches
+        vector<int> heights(n);
+        set<int> uniqueHeights; // To store unique non-zero heights
+
+        for (int i = 0; i < n; ++i) {
+            cin >> heights[i]; // Read the grass heights
+            if (heights[i] > 0) {
+                uniqueHeights.insert(heights[i]); // Insert only non-zero heights
+            }
+        }
+
+        // The number of unique non-zero heights is the answer for this test case
+        cout << uniqueHeights.size() << endl;
+    }
+  
+    return 0;
+}
