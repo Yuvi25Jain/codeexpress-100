@@ -1,0 +1,124 @@
+Question :
+
+You are observing the growth of a mystical tree in a forest. Every day, a new branch grows with a certain length. The tree aims to maintain its balance by ensuring that the median length of all branches grown so far is known.
+
+For each new branch length added, determine the median length of the tree’s branches.
+
+Print only the integer part of the median.
+
+Input Format
+
+The first line contains T, the number of test cases.
+For each test case:
+The first line contains an integer N, representing the number of branches that will grow.
+The second line contains N integers separated by a single space, where each integer represents the length of a newly grown branch.
+Constraints
+
+1<= T <=1000
+0<= N <=10^5
+1<= branch length <=10^5
+Output Format
+
+Print the median branch length after each new branch grows, separated by spaces.
+Sample Input 0
+
+1
+6
+6 2 1 3 7 5
+Sample Output 0
+
+6 4 2 2 3 4
+Explanation 0
+
+branches = {6}, median = 6
+branches = {6, 2} -> {2, 6}, median = 4
+branches = {6, 2, 1} -> {1, 2, 6}, median = 2
+branches = {6, 2, 1, 3} -> {1, 2, 3, 6}, median = 2
+branches = {6, 2, 1, 3, 7} -> {1, 2, 3, 6, 7}, median = 3
+branches = {6, 2, 1, 3, 7, 5} -> {1, 2, 3, 5, 6, 7}, median = 4
+Sample Input 1
+
+1
+5
+5 4 3 2 1
+Sample Output 1
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+class MedianFinder {
+private:
+    priority_queue<int> maxHeap; // Max-heap for the lower half
+    priority_queue<int, vector<int>, greater<int>> minHeap; // Min-heap for the upper half
+
+public:
+    void addNum(int num) {
+        // Add to maxHeap (lower half)
+        maxHeap.push(num);
+        
+        // Ensure maxHeap's largest is <= minHeap's smallest
+        if (!minHeap.empty() && maxHeap.top() > minHeap.top()) {
+            minHeap.push(maxHeap.top());
+            maxHeap.pop();
+        }
+
+        // Balance the sizes of the heaps
+        if (maxHeap.size() > minHeap.size() + 1) {
+            minHeap.push(maxHeap.top());
+            maxHeap.pop();
+        } else if (minHeap.size() > maxHeap.size()) {
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }
+    }
+
+    int findMedian() {
+        if (maxHeap.size() > minHeap.size()) {
+            return maxHeap.top(); // Odd number of elements
+        } else {
+            return (maxHeap.top() + minHeap.top()) / 2; // Even number of elements
+        }
+    }
+};
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int N;
+        cin >> N;
+        MedianFinder medianFinder;
+        vector<int> results;
+
+        for (int i = 0; i < N; ++i) {
+            int length;
+            cin >> length;
+            medianFinder.addNum(length);
+            results.push_back(medianFinder.findMedian());
+        }
+
+        for (size_t i = 0; i < results.size(); ++i) { // Change int to size_t
+            cout << results[i];
+            if (i < results.size() - 1) {
+                cout << " ";
+            }
+        }
+        cout << endl;
+    }
+ 
+  
+    return 0;
+}
+
+5 4 4 3 3
