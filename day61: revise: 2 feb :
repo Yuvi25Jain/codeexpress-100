@@ -1,0 +1,109 @@
+Question :
+
+
+You are given a landscape represented as a string s, consisting only of uppercase English letters.
+
+Some areas of the land are overgrown with weeds—represented by the substrings "GR" (Grass Roots) and "WL" (Wild Leaves).
+
+To clear the land, you can remove any occurrence of "GR" or "WL" in one operation. The land then reconnects, potentially forming new "GR" or "WL" areas.
+
+Your goal is to determine the minimum possible length of the land after all possible clearing operations are performed.
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+Each of the next T lines contains a string s, representing the initial state of the land.
+Constraints
+
+1 <= |s| <= 100 (length of the land)
+s consists only of uppercase English letters.
+1 <= T <= 1000
+Output Format
+
+For each test case, print the minimum possible length of the land after all possible clearing operations.
+
+Sample Input 0
+
+1
+GRFIELDWL
+Sample Output 0
+
+5
+Explanation 0
+
+"GRFIELDWL"
+
+Remove substring, land becomes "FIELDWL".
+Remove substring, land becomes "FIELD".
+Minimum length = 5.
+Sample Input 1
+
+1
+FARMLAND
+Sample Output 1
+
+8
+Explanation 1
+
+No substring to clear in "FARMLAND". Minimum length = 8.
+
+
+  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+CODE:
+
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <stack>
+#include <string>
+using namespace std;
+
+
+int minimumLengthAfterClearing(const std::string& s) {
+    stack<char> st;
+
+    for (char c : s) {
+        // Push the current character onto the stack
+        st.push(c);
+
+        // Check if the top of the stack forms "GR" or "WL"
+        if (st.size() >= 2) {
+            char second = st.top(); st.pop(); // Get the top character
+            char first = st.top(); st.pop(); // Get the second character
+
+            // Check for "GR" or "WL"
+            if ((first == 'G' && second == 'R') || (first == 'W' && second == 'L')) {
+                // If we found "GR" or "WL", we do not push them back
+                continue; // Effectively remove "GR" or "WL"
+            } else {
+                // If not, push them back
+                st.push(first);
+                st.push(second);
+            }
+        }
+    }
+
+    // The remaining characters in the stack represent the cleared land
+    return st.size();
+}
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+    cin.ignore(); // Ignore the newline after the integer input
+
+    for (int i = 0; i < T; ++i) {
+        string s;
+        getline(cin, s); // Read the string for each test case
+        int result = minimumLengthAfterClearing(s);
+        cout << result << endl; // Output the result for each test case
+    }
+
+ 
+    return 0;
+}
