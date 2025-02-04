@@ -1,0 +1,111 @@
+Question :
+
+A flock of n birds is migrating through an infinitely vast sky. Each bird is flying at the same speed but in one of three possible states:
+
+'L': The bird is flying towards the left.
+'R': The bird is flying towards the right.
+'S': The bird is hovering in place.
+You are given a 0-indexed string directions of length n, where directions[i] represents the state of the i-th bird. Each bird is positioned at a unique location in the sky along a single migration path.
+
+A collision occurs when:
+
+Two birds flying in opposite directions (one 'L' and one 'R') crash into each other. This increases the number of collisions by 2, and the birds become stationary.
+A moving bird collides with a stationary (hovering) bird ('S'). This increases the number of collisions by 1, and the moving bird also becomes stationary.
+After a collision, birds involved in the crash stop moving and remain in place. Other birds continue their motion unless they also collide.
+
+Determine the total number of collisions that will happen in the sky.
+
+Input Format
+
+The first line contains T, the number of test cases.
+Each of the next T lines contains a string directions, representing the movement of birds.
+Constraints
+
+1≤T≤1000
+1≤∣directions∣≤10^5
+Each character in directions is either 'L', 'R', or 'S'.
+Output Format
+
+For each test case, print the total number of mid-air collisions.
+
+Sample Input 0
+
+1
+RLRSLL
+Sample Output 0
+
+5
+Explanation 0
+
+The collisions that will happen in the sky are:
+
+Birds 0 ('R') and 1 ('L') crash head-on, causing 2 collisions.
+Birds 2 ('R') and 3 ('S') collide, adding 1 collision (total: 3).
+Birds 3 ('S') and 4 ('L') collide, adding 1 collision (total: 4).
+Birds 4 ('L') and 5 ('L') collide (after 4 becomes stationary), adding 1 collision (total: 5).
+Thus, the total number of collisions that will happen is 5.
+
+Sample Input 1
+
+2
+SSSS
+SRSRS
+Sample Output 1
+
+0
+2
+Explanation 1
+
+SSSS → No movement, no collisions. Thus, the total number of collisions that will happen is 0.
+
+SRSRS →
+
+Bird 1 ('R') collides with 2 ('S') → 1 collision.
+Bird 3 ('R') collides with 4 ('S') → 1 collision.
+Thus, the total number of collisions that will happen is 2.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+  
+  
+  #include <iostream>
+#include <string>
+using namespace std;
+
+int countCollisions(const string& directions) {
+    int collisions = 0;
+    int n = directions.size();
+    
+    // Count the number of 'R's before encountering 'L' or 'S'
+    int countR = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (directions[i] == 'R') {
+            countR++;
+        } else if (directions[i] == 'L') {
+            // All 'R's before this 'L' will collide with this 'L'
+            collisions += 2 * countR; // Each R-L collision counts as 2
+            countR = 0; // Reset countR as they become stationary
+        } else if (directions[i] == 'S') {
+            // All 'R's before this 'S' will collide with this 'S'
+            collisions += countR; // Each R-S collision counts as 1
+            countR = 0; // Reset countR as they become stationary
+        }
+    }
+
+    return collisions;
+}
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+    while (T--) {
+        string directions;
+        cin >> directions; // Read the directions for each test case
+        cout << countCollisions(directions) << endl; // Output the result for each test case
+    }
+    return 0;
+}
