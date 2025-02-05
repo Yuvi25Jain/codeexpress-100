@@ -1,0 +1,125 @@
+Question :
+
+A railway track has n stations arranged in a straight line, each with an elevation heights[i] (in meters). A Railway Dip Pattern exists if there are three stations A, B, and C (with indices i, j, k such that i < j < k) that form a dip in the track, meaning heights[i] < heights[k] < heights[j].
+
+In other words, the train first climbs up from A to B, then dips down at C before continuing.
+
+Your task is to determine whether such a Railway Dip Pattern exists for the given railway track elevations.
+
+Input Format
+
+The first line contains T, the number of test cases.
+The first line of each test case contains an integer n, the number of stations.
+The second line of each test case contains n integers representing the heights of the stations.
+Constraints
+
+1 <= T <= 1000
+n == number of stations
+1 <= n <= 2 * 10^5
+-10^9 <= heights[i] <= 10^9
+Output Format
+
+For each test case, print "Yes" if there is a Railway Dip Pattern, otherwise print "No".
+
+Sample Input 0
+
+1
+4
+1 2 3 4
+Sample Output 0
+
+No
+Explanation 0
+
+There is no Railway Dip Pattern in the sequence.
+
+Sample Input 1
+
+1
+4
+3 1 4 2
+Sample Output 1
+
+Yes
+Explanation 1
+
+There is a Railway Dip Pattern in the sequence: [1, 4, 2].
+
+Sample Input 2
+
+1
+4
+-1 3 2 0
+Sample Output 2
+
+Yes
+Explanation 2
+
+There are three Railway Dip Pattern in the sequence: [-1, 3, 2], [-1, 3, 0] and [-1, 2, 0].
+
+Contest ends in a month
+Submissions: 25
+Max Score: 1
+Difficulty: Medium
+Rate This Challenge:
+
+    
+More
+ 
+1
+
+  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <limits.h>
+using namespace std;
+
+
+bool hasRailwayDipPattern(const vector<int>& heights) {
+    int n = heights.size();
+    if (n < 3) return false; // Need at least 3 stations for a dip
+
+    // We will keep track of the minimum height to the left of each position
+    vector<int> leftMin(n);
+    leftMin[0] = heights[0];
+
+    for (int i = 1; i < n; ++i) {
+        leftMin[i] = min(leftMin[i - 1], heights[i]);
+    }
+
+    // Now we will check for the dip pattern
+    int rightMax = heights[n - 1];
+
+    for (int j = n - 2; j > 0; --j) {
+        // Check if we can form a dip with leftMin[j - 1] and rightMax
+        if (leftMin[j - 1] < heights[j] && heights[j] > rightMax) {
+            return true;
+        }
+        rightMax = max(rightMax, heights[j]);
+    }
+
+    return false;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int n;
+        cin >> n;
+        vector<int> heights(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> heights[i];
+        }
+        cout << (hasRailwayDipPattern(heights) ? "Yes" : "No") << endl;
+    }
+  
+    return 0;
+}
