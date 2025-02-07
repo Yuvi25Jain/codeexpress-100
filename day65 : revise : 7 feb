@@ -1,0 +1,117 @@
+Question 
+
+the Enchanted Forest, vines grow in pairs, wrapping around magical symbols and forming protective barriers. However, some vines are unnecessary and make navigating the forest more difficult.
+
+A pair of vines is said to be redundant when it encloses a section of the forest unnecessarily, making no real difference to the magical structure.
+
+Your task is to determine whether the given forest structure contains redundant vines or not.
+
+If there are no vines (parentheses) in the input, return "false" since there's nothing to check.
+
+Input Format
+
+The first line contains T, the number of test cases.
+The second line contains a string representation of the forest structure, without any spaces.
+Constraints
+
+1 ≤ T ≤ 1000
+0 ≤ N ≤ 10^6
+Time Limit: 1 second
+Output Format
+
+Print "true" if the structure contains redundant vines, otherwise print "false".
+
+Sample Input 0
+
+1
+a+(b)+c
+Sample Output 0
+
+true
+Explanation 0
+
+The expression can be reduced to a+b+c. Hence, the brackets are redundant.
+
+Sample Input 1
+
+1
+(a+b)
+Sample Output 1
+
+false
+Explanation 1
+
+The vines here are necessary and not redundant.
+
+
+--------_------------
+
+
+code:
+
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+bool hasRedundantVines(const string& expression) {
+    stack<char> s;
+
+    for (char ch : expression) {
+        if (ch == ')') {
+            // Check if the top of the stack is a '('
+            if (s.empty() || s.top() == '(') {
+                return true; // Found redundant parentheses
+            }
+
+            // Check if there is anything meaningful between the parentheses
+            bool hasContent = false;
+            while (!s.empty() && s.top() != '(') {
+                hasContent = true; // Found something meaningful
+                s.pop();
+            }
+
+            // Pop the '('
+            if (!s.empty()) {
+                s.pop();
+            }
+
+            // If we didn't find any meaningful content, it's redundant
+            if (!hasContent) {
+                return true; // Found redundant parentheses
+            }
+        } else {
+            // Push all other characters onto the stack
+            s.push(ch);
+        }
+    }
+
+    return false; // No redundant vines found
+}
+
+int main() {
+    int T;
+    cin >> T;
+    cin.ignore(); // To ignore the newline after the integer input
+
+    while (T--) {
+        string expression;
+        getline(cin, expression);
+
+        // If there are no parentheses, return false
+        if (expression.find('(') == string::npos && expression.find(')') == string::npos) {
+            cout << "false" << endl;
+            continue;
+        }
+
+        // Check for redundant vines
+        if (hasRedundantVines(expression)) {
+            cout << "true" << endl;
+        } else {
+            cout << "false" << endl;
+        }
+    }
+
+    return 0;
+}
