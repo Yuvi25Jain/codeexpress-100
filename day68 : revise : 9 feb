@@ -1,0 +1,106 @@
+Question :
+
+After months of exams and sleepless nights, students finally board the train home for vacation. Each station on the route stirs emotions—some bring relief and excitement(positive), others recall stress and exhaustion(negative) and a few feeling completely neutral(zero).
+
+Not every part of the trip is joyful, but somewhere along the way lies the happiest stretch—the part of the journey where students feel their spirits lift the most. Since the train moves in a circular route, this stretch wrap around from the last station back to the first.
+
+Can you help them find the most uplifting part of their ride home?
+
+Input Format
+
+The first line contains T, the number of test cases.
+The first line of each test case contains n, the number of stations.
+The second line of each test case contains n integers representing the happiness levels at each station.
+Constraints
+
+1 ≤ T ≤ 1000
+1 ≤ n ≤ 30,000
+−3 * 10^4 ≤ happiness level at each station ≤ 3 * 10^4
+Output Format
+
+For each test case, print the maximum possible sum of happiness levels from a contiguous segment of stations.
+
+Sample Input 0
+
+3
+4
+1 -2 3 -2
+3
+5 -3 5
+3
+-3 -2 -3
+Sample Output 0
+
+3
+10
+-2
+Explanation 0
+
+Test Case 1: The happiest segment is [3], with a total happiness of 3.
+Test Case 2: The happiest segment is [5, 5], with a total happiness of 5 + 5 = 10.
+Test Case 3: The happiest segment is [-2], with a total happiness of -2.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <limits.h>
+using namespace std;
+
+
+int kadane(const vector<int>& happiness) {
+    int max_ending_here = happiness[0];
+    int max_so_far = happiness[0];
+    
+    for (size_t i = 1; i < happiness.size(); ++i) {
+        max_ending_here = max(happiness[i], max_ending_here + happiness[i]);
+        max_so_far = max(max_so_far, max_ending_here);
+    }
+    
+    return max_so_far;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    
+    while (T--) {
+        int n;
+        cin >> n;
+        vector<int> happiness(n);
+        
+        for (int i = 0; i < n; ++i) {
+            cin >> happiness[i];
+        }
+        
+        // Case 1: Maximum sum for non-circular subarray
+        int max_non_circular = kadane(happiness);
+        
+        // Case 2: Maximum sum for circular subarray
+        int total_sum = 0;
+        for (int i = 0; i < n; ++i) {
+            total_sum += happiness[i];
+            happiness[i] = -happiness[i]; // Invert the happiness levels
+        }
+        
+        int max_circular = total_sum + kadane(happiness); // Total sum - min subarray sum
+        
+        // If all numbers are negative, max_circular will be equal to total_sum
+        // In that case, we should only consider max_non_circular
+        if (max_circular == 0) {
+            cout << max_non_circular << endl;
+        } else {
+            cout << max(max_non_circular, max_circular) << endl;
+        }
+    }
+    
+ 
+    return 0;
+}
