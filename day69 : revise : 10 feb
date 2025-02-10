@@ -1,0 +1,126 @@
+Question :
+
+
+At a busy railway station, passengers are waiting in a queue to board a train. The train offers two types of seats: Window (0) and Aisle (1). Each passenger has a preference for a specific type of seat.
+
+The available seats are arranged in a stack, meaning the first available seat (top of the stack) must be assigned before moving to the next one. At each step:
+
+If the passenger at the front of the queue prefers the seat at the top of the stack, they take it and board the train.
+Otherwise, they move to the end of the queue to wait for a better option.
+This continues until no passengers in the queue are willing to take the top seat, meaning some passengers are left without a seat.
+
+Input Format
+
+The first line contains T, the number of test cases.
+The first line of each testcase will give n, representing the number of passengers and available seats.
+The second line of each testcase will give the array passengers.
+The third line of each testcase will give the array available seats.
+Constraints
+
+1 <= T <= 1000.
+1 <= n <= 100
+seat[i] and passenger[i] are either 0 or 1.
+The number of passengers equals the number of available seats.
+Output Format
+
+For each test case, print the number of passengers who were unable to get a seat.
+
+Sample Input 0
+
+1  
+4  
+1 1 0 0  
+0 1 0 1  
+Sample Output 0
+
+0
+Explanation 0
+
+Passenger queue: [1, 1, 0, 0], Seat stack: [0, 1, 0, 1]
+
+First passenger (1) moves to the back → [1, 0, 0, 1]
+Next passenger (1) moves to the back → [0, 0, 1, 1]
+Next passenger (0) takes the Window seat → [0, 1, 1], Seats: [1, 0, 1]
+Next passenger (0) moves to the back → [1, 1, 0]
+Next passenger (1) takes the Aisle seat → [1, 0], Seats: [0, 1]
+Next passenger (1) moves to the back → [0, 1]
+Next passenger (0) takes the Window seat → [1], Seats: [1]
+Last passenger (1) takes the Aisle seat → [], Seats: []
+Hence all passengers are able to get a seat.
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+
+    while (T--) {
+        int n;
+        cin >> n; // Read number of passengers and seats
+
+        vector<int> passengers(n);
+        vector<int> seats(n);
+
+        // Read passengers' preferences
+        for (int i = 0; i < n; ++i) {
+            cin >> passengers[i];
+        }
+
+        // Read available seats
+        for (int i = 0; i < n; ++i) {
+            cin >> seats[i];
+        }
+
+        queue<int> passengerQueue;
+        for (int i = 0; i < n; ++i) {
+            passengerQueue.push(passengers[i]);
+        }
+
+        int seatIndex = 0; // Index for available seats
+        int unableToSeat = 0; // Count of passengers unable to get a seat
+        int totalPassengers = n; // Total number of passengers
+
+        // Process the queue until all seats are filled or no one can take a seat
+        while (!passengerQueue.empty() && seatIndex < n) {
+            int currentPassenger = passengerQueue.front();
+            passengerQueue.pop();
+
+            if (currentPassenger == seats[seatIndex]) {
+                // Passenger takes the seat
+                seatIndex++;
+            } else {
+                // Passenger moves to the end of the queue
+                passengerQueue.push(currentPassenger);
+            }
+
+            // If we have cycled through all passengers without seating anyone
+            if (passengerQueue.size() == totalPassengers) {
+                unableToSeat = passengerQueue.size();
+                break;
+            }
+        }
+
+        // The remaining passengers in the queue are unable to get a seat
+        unableToSeat += passengerQueue.size();
+
+        cout << unableToSeat << endl; // Output the result for the test case
+    }
+
+ 
+    return 0;
+}
