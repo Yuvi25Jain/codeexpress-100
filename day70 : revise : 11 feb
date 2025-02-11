@@ -1,0 +1,83 @@
+Question:
+
+A group of n friends is enjoying a picnic by the riverbank. They sit in a circle around a big picnic mat, numbered from 1 to n in clockwise order.
+
+To add some excitement to their day, they decide to play a passing game with a frisbee:
+
+The game starts with friend 1 holding the frisbee.
+Moving clockwise, they pass the frisbee k times, counting the friend they start with. If they reach the last person in the circle, they continue from the first person again.
+The friend who receives the frisbee on the kth pass is out of the game and goes to relax by the river.
+The next round starts with the friend immediately clockwise of the one who left.
+This continues until only one friend is left, who is declared the winner of the game!
+Input Format
+
+The first line contains T, the number of test cases.
+Each test case contains two integers n and k, representing the number of friends and the count number, respectively.
+Constraints
+
+1 <= T <= 1000
+1 <= k <= n <= 500
+Output Format
+
+For each test case, print the number of the last friend remaining in the game.
+
+Sample Input 0
+
+1
+5 2
+Sample Output 0
+
+3
+Explanation 0
+
+The elimination sequence follows these steps:
+
+Start at friend 1. Pass the frisbee 2 times (1 → 2). Friend 2 steps out to relax.
+Start at friend 3. Pass the frisbee 2 times (3 → 4). Friend 4 steps out.
+Start at friend 5. Pass the frisbee 2 times (5 → 1). Friend 1 steps out.
+Start at friend 3. Pass the frisbee 2 times (3 → 5). Friend 5 steps out.
+Friend 3 is the last one left and wins the game!
+Sample Input 1
+
+1
+6 5
+Sample Output 1
+
+1
+Explanation 1
+
+The elimination sequence follows as 5 → 4 → 6 → 2 → 3. The last friend remaining is friend 1, who wins the game!
+
+
+  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int josephus(int n, int k) {
+    int result = 0; // Base case: when there's only one person, they are the winner
+    for (int i = 2; i <= n; ++i) {
+        result = (result + k) % i; // Update the position of the winner
+    }
+    return result + 1; // Convert from 0-based index to 1-based index
+}
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+    while (T--) {
+        int n, k;
+        cin >> n >> k; // Read n and k for each test case
+        cout << josephus(n, k) << endl; // Output the result for each test case
+    }
+ 
+    return 0;
+}
+
