@@ -1,0 +1,115 @@
+Question :
+
+Lightning McQueen is racing on a track full of twists and turns. The track is structured like a Binary Search Tree (BST) based on the given speed checkpoints (array values). He must follow a ZigZag racing path, where:
+
+McQueen starts at a checkpoint (BST node) and chooses a racing path (left or right).
+If he goes right, his next move must be left.
+If he goes left, his next move must be right.
+The ZigZag length is counted as the number of turns he makes.
+Help McQueen find the longest ZigZag race path he can take in this track! And remember, just like Doc Hudson said: "The more you look right, the more you’ll find yourself turning left."
+
+    ______
+   /|_||_\`.__
+  (   _    _ _\
+  =`-(_)--(_)-'
+Input Format
+
+The first line will give T, the number of testcases.
+The first line of each testcase will give n, the size of array nums.
+The second line of each testcase will give the array nums.
+Constraints
+
+1 <= T <= 1000
+1 <= n <= 100
+-10^3 <= nums[i] <= 10^3
+Output Format
+
+For each test case, print the length of the longest ZigZag path McQueen can take in the BST.
+
+Sample Input 0
+
+1
+10
+1 10 2 9 3 8 4 7 5 6
+Sample Output 0
+
+9
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  CODE:
+
+ #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+// Function to insert a new value into the BST
+TreeNode* insert(TreeNode* root, int val) {
+    if (!root) return new TreeNode(val);
+    if (val < root->val) {
+        root->left = insert(root->left, val);
+    } else {
+        root->right = insert(root->right, val);
+    }
+    return root;
+}
+
+// Function to find the longest ZigZag path
+void longestZigZagHelper(TreeNode* node, bool isLeft, int length, int &maxLength) {
+    if (!node) return;
+    
+    maxLength = max(maxLength, length);
+    
+    if (isLeft) {
+        longestZigZagHelper(node->left, false, length + 1, maxLength); // Go left
+        longestZigZagHelper(node->right, true, 1, maxLength); // Go right
+    } else {
+        longestZigZagHelper(node->right, true, length + 1, maxLength); // Go right
+        longestZigZagHelper(node->left, false, 1, maxLength); // Go left
+    }
+}
+
+// Main function to find the longest ZigZag path in the BST
+int longestZigZag(TreeNode* root) {
+    int maxLength = 0;
+    longestZigZagHelper(root, true, 0, maxLength); // Start with left
+    longestZigZagHelper(root, false, 0, maxLength); // Start with right
+    return maxLength;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int n;
+        cin >> n;
+        vector<int> nums(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> nums[i];
+        }
+
+        TreeNode* root = nullptr;
+        for (int num : nums) {
+            root = insert(root, num);
+        }
+
+        // Find the longest ZigZag path
+        int result = longestZigZag(root);
+        cout << result << endl;
+    }
+   
+    return 0;
+}
