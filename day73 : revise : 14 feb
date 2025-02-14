@@ -1,0 +1,130 @@
+Question:
+
+In the Kingdom of Integra, a mystical Tree of Wisdom is said to grow from a set of magical numbers. The tree follows a sacred rule—each number finds its rightful place based on an ancient order: every number in the left subtree is smaller than the root, and every number in the right subtree is greater.
+
+The Great Seer of the kingdom wishes to uncover the greatest magical difference between an ancestor and a descendant within this sacred tree. An ancestor is defined as any number from which another number descends directly or indirectly.
+
+Help the Great Seer find the maximum magical difference in the tree.
+
+Input Format
+
+The first line contains T, the number of test cases.
+The first line of each test case contains n, the number of elements in the magical sequence.
+The second line contains n integers, representing the numbers that will grow into the Tree of Wisdom.
+Constraints
+
+1 <= T <= 1000
+1 <= n <= 100
+-10^3 <= nums[i] <= 10^3
+Output Format
+
+For each test case, print the maximum magical difference between an ancestor and a descendant.
+
+Sample Input 0
+
+1
+9
+8 3 10 1 6 14 4 7 13
+Sample Output 0
+
+7
+Explanation 0
+
+The Seer observes various magical differences:
+
+|8 - 3| = 5
+
+|3 - 7| = 4
+
+|8 - 1| = 7
+
+|10 - 13| = 3
+
+Among all possible differences, the greatest is 7, achieved by |8 - 1| = 7.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <limits.h>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+// Function to insert a new value into the BST
+TreeNode* insert(TreeNode* root, int val) {
+    if (!root) return new TreeNode(val);
+    if (val < root->val) {
+        root->left = insert(root->left, val);
+    } else {
+        root->right = insert(root->right, val);
+    }
+    return root;
+}
+
+// Function to find the maximum difference between ancestor and descendant
+void findMaxDifference(TreeNode* node, int minVal, int maxVal, int& maxDiff) {
+    if (!node) return;
+
+    // Update the max difference
+    maxDiff = max(maxDiff, max(abs(node->val - minVal), abs(node->val - maxVal)));
+
+    // Update the min and max values
+    minVal = min(minVal, node->val);
+    maxVal = max(maxVal, node->val);
+
+    // Traverse the left and right subtrees
+    findMaxDifference(node->left, minVal, maxVal, maxDiff);
+    findMaxDifference(node->right, minVal, maxVal, maxDiff);
+}
+
+// Main function to process each test case
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int n;
+        cin >> n;
+        vector<int> nums(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> nums[i];
+        }
+
+        // Create the BST
+        TreeNode* root = NULL;
+        for (int num : nums) {
+            root = insert(root, num);
+        }
+
+        // Initialize variables to find max difference
+        int maxDiff = 0;
+        // int minVal = INT_MAX;
+        // int maxVal = INT_MIN;
+
+        // Find the maximum difference
+        findMaxDifference(root, root->val, root->val, maxDiff);
+
+        // Output the result for the current test case
+        cout << maxDiff << endl;
+    }
+
+    
+  
+    return 0;
+}
+
+
