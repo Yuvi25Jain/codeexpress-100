@@ -1,0 +1,110 @@
+Question :
+
+In the Enchanted Forest of Eldoria, a mystical tree grows from a sequence of magical numbers. The forest sages follow an ancient ritual—each number is carefully placed in the tree based on the Order of Balance:
+
+Every number in the left grove (subtree) is smaller than its parent.
+Every number in the right grove (subtree) is greater than its parent.
+Legends say that the whispers of the leftmost leaves hold the wisdom of the forest. A left whisper (left leaf) is a guardian of secrets, a leaf that is the left child of another node.
+
+The High Sage wishes to uncover the sum of all left whispers in the Tree of Eldoria. Can you help?
+
+Input Format
+
+The first line contains T, the number of test cases.
+The first line of each test case contains n, the number of elements in the magical sequence.
+The second line contains n integers, representing the numbers that will grow into the Tree of Eldoria.
+Constraints
+
+1 <= T <= 1000
+1 <= n <= 100
+-10^3 <= nums[i] <= 10^3
+Output Format
+
+For each test case, print the sum of all left whispers in the tree.
+
+Sample Input 0
+
+1
+7
+5 3 7 1 4 6 10
+Sample Output 0
+
+7
+Explanation 0
+
+The left whispers (left leaves) are:
+
+1 (left child of 3)
+6 (left child of 7)
+The sum of these left whispers is 1 + 6 = 7.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to insert a new value into the BST
+TreeNode* insert(TreeNode* root, int val) {
+    if (!root) {
+        return new TreeNode(val);
+    }
+    if (val < root->val) {
+        root->left = insert(root->left, val);
+    } else {
+        root->right = insert(root->right, val);
+    }
+    return root;
+}
+
+// Function to calculate the sum of left leaves
+int sumLeftLeaves(TreeNode* root, bool isLeft) {
+    if (!root) return 0;
+    
+    // If it's a left leaf
+    if (!root->left && !root->right && isLeft) {
+        return root->val;
+    }
+    
+    // Recur for left and right subtrees
+    return sumLeftLeaves(root->left, true) + sumLeftLeaves(root->right, false);
+}
+
+int main() {
+    int T;
+    cin >> T; // Number of test cases
+    while (T--) {
+        int n;
+        cin >> n; // Number of elements in the magical sequence
+        vector<int> nums(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> nums[i]; // Read the numbers
+        }
+
+        TreeNode* root = nullptr;
+        // Build the BST
+        for (int num : nums) {
+            root = insert(root, num);
+        }
+
+        // Calculate the sum of left whispers (left leaves)
+        int result = sumLeftLeaves(root, false);
+        cout << result << endl; // Output the result for the test case
+    }
+   
+    return 0;
+}
