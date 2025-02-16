@@ -1,0 +1,130 @@
+Question:
+
+
+A new office building has several floors, and employees are assigned workspaces based on their floor level. You are given a list of employees arriving in the building in a specific order. The floor on which each employee is assigned follows the rules of a Binary Search Tree (BST) constructed from the given order.
+
+The ground floor is considered Level 1, its directly connected floors are Level 2, and so on.
+
+Find the smallest floor number (level x) that has the highest number of employees (sum of all employee IDs at that floor).
+
+Input Format
+
+The first line contains T, the number of test cases.
+The first line of each test case contains n, the number of employees.
+The second line of each test case contains n space-separated integers representing the employee IDs, indicating their order of arrival.
+Constraints
+
+1 <= T <= 1000
+1 <= n <= 100
+-10^3 <= nums[i] <= 10^3
+Output Format
+
+For each test case, print the smallest floor (level) x that has the maximum sum of employee IDs.
+
+Sample Input 0
+
+1
+5
+1 0 7 7 -8
+Sample Output 0
+
+2
+Explanation 0
+
+Level 1 (Ground Floor): 1
+Level 2: 0, 7 → Sum = 7
+Level 3: 7, -8 → Sum = -1
+Since Level 2 has the maximum sum of 7, the output is 2.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <climits> // For INT_MIN and INT_MAX
+#include <unordered_map>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+// Function to insert a value into the BST
+TreeNode* insert(TreeNode* root, int val) {
+    if (!root) return new TreeNode(val);
+    if (val < root->val) {
+        root->left = insert(root->left, val);
+    } else {
+        root->right = insert(root->right, val);
+    }
+    return root;
+}
+
+// Function to calculate the sum of employee IDs at each level
+unordered_map<int, int> levelSum(TreeNode* root) {
+    unordered_map<int, int> levelSums;
+    if (!root) return levelSums;
+
+    queue<pair<TreeNode*, int>> q; // Pair of node and its level
+    q.push({root, 1});
+
+    while (!q.empty()) {
+        auto front = q.front();
+        TreeNode* node = front.first;
+        int level = front.second;
+        q.pop();
+        levelSums[level] += node->val;
+
+        if (node->left) q.push({node->left, level + 1});
+        if (node->right) q.push({node->right, level + 1});
+    }
+
+    return levelSums;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int n;
+        cin >> n;
+        vector<int> employeeIDs(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> employeeIDs[i];
+        }
+
+        TreeNode* root = nullptr;
+        for (int id : employeeIDs) {
+            root = insert(root, id);
+        }
+
+        unordered_map<int, int> sums = levelSum(root);
+        int maxSum = INT_MIN;
+        int minLevel = INT_MAX;
+
+        for (auto it = sums.begin(); it != sums.end(); ++it) {
+            int level = it->first;
+            int sum = it->second;
+            if (sum >maxSum) {
+                maxSum = sum;
+                minLevel = level;
+            } else if (sum == maxSum) {
+                minLevel = min(minLevel, level);
+            }
+        }
+
+        cout << minLevel << endl;
+    }
+ 
+    return 0;
+}
