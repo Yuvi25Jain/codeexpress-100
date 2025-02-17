@@ -1,0 +1,111 @@
+Question:
+
+The Seven Kingdoms of Westeros are made up of n noble houses. Some of them have alliances, while others remain independent. If House A is directly allied with House B, and House B is directly allied with House C, then House A is indirectly allied with House C.
+
+A Great Kingdom is a group of directly or indirectly allied noble houses that are not connected to any other house outside the group.
+
+You are given an n × n matrix isConnected, where isConnected[i][j] = 1 if the i-th house and j-th house have a direct alliance, and isConnected[i][j] = 0 otherwise.
+
+Print the total number of Great Kingdoms in Westeros.
+
+Input Format
+
+The first line contains T, the number of test cases.
+The first line of each test case contains n, the number of noble houses.
+The next line of each test case contains the n × n matrix isConnected, representing alliances between houses.
+Constraints
+
+1 <= T <= 1000
+1 <= n <= 200
+n == isConnected.length
+n == isConnected[i].length
+isConnected[i][j] is 1 or 0.
+isConnected[i][i] == 1
+isConnected[i][j] may or maynot be equal to isConnected[j][i]
+Output Format
+
+For each test case, print the total number of Great Kingdoms in Westeros.
+
+Sample Input 0
+
+1
+3
+1 1 0
+1 1 0
+0 0 1
+Sample Output 0
+
+2
+Explanation 0
+
+House 1 and House 2 are directly allied.
+House 3 is independent.
+So, there are 2 Great Kingdoms.
+Sample Input 1
+
+1
+3
+1 0 0
+0 1 0
+0 0 1
+Sample Output 1
+
+3
+
+  -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+void dfs(int house, vector<vector<int>>& isConnected, vector<bool>& visited) {
+    visited[house] = true; // Mark the current house as visited
+    for (size_t  i = 0; i < isConnected.size(); ++i) {
+        // If there is a direct alliance and the house is not visited
+        if (isConnected[house][i] == 1 && !visited[i]) {
+            dfs(i, isConnected, visited); // Visit the next house
+        }
+    }
+}
+
+int countGreatKingdoms(vector<vector<int>>& isConnected) {
+     size_t n = isConnected.size();
+    vector<bool> visited(n, false);
+    int kingdomCount = 0;
+
+    for (size_t i = 0; i < n; ++i) {
+        if (!visited[i]) { // If the house is not visited, it's a new kingdom
+            dfs(i, isConnected, visited);
+            kingdomCount++; // Increment the count of Great Kingdoms
+        }
+    }
+    return kingdomCount;
+}
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+    while (T--) {
+        int n;
+        cin >> n; // Read the number of noble houses
+        vector<vector<int>> isConnected(n, vector<int>(n));
+        
+        // Read the n x n matrix
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                cin >> isConnected[i][j];
+            }
+        }
+        
+        // Count and print the number of Great Kingdoms
+        cout << countGreatKingdoms(isConnected) << endl;
+    }
+   
+    return 0;
+}
