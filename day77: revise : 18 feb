@@ -1,0 +1,51 @@
+Question:
+
+Deep within the Enchanted Forest, there are n mystical clearings, each labeled from 0 to n - 1. Some of these clearings are connected by enchanted pathways, allowing travelers to move between them. The pathways are represented as a 2D integer array paths, where paths[i] = [ui, vi] denotes a bi-directional enchanted pathway between clearing ui and clearing vi.
+
+No clearing is connected to itself, and multiple pathways may exist between the same two clearings.
+
+You are a brave traveler trying to find a way from the starting clearing (source) to the destination clearing (destination).
+
+Your task is to determine whether a valid path exists from source to destination. If a path exists, print "Yes"; otherwise, print "No".
+
+Input Format
+
+The first line contains n, the number of clearings in the forest.
+The next n lines contain the 2D array paths, where paths[i] = [ui, vi] represents a bi-directional enchanted pathway between clearings ui and vi.
+The last line contains two integers: source (the starting clearing) and destination (the target clearing).
+Constraints
+
+1 <= n <= 2 * 10^5
+0 <= paths.length <= 2 * 10^5
+paths[i].length == 2
+0 <= ui, vi <= n - 1
+ui != vi
+0 <= source, destination <= n - 1
+There are no self loops.
+Output Format
+
+Print "Yes" if a valid path exists from source to destination.
+Otherwise, print "No".
+Sample Input 0
+
+3
+0 1
+1 2
+2 0
+0 2
+Sample Output 0
+
+Yes
+Explanation 0
+
+In the Enchanted Forest, there are two possible paths from clearing 0 to clearing 2:
+
+Path 1: 0 → 1 → 2
+Path 2: 0 → 2
+Since a path exists, the output is "Yes".
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
