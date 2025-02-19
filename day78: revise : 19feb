@@ -1,0 +1,119 @@
+Question :
+
+In the heart of Mysterville, a cunning detective is investigating a series of mysterious events happening across n different crime scenes. Each crime scene is marked on a 2D-plane, with coordinates representing their exact locations.
+
+The detective's challenge is to connect all the crime scenes with the minimum effort to form a complete investigative network, ensuring that every crime scene is reachable from any other.
+
+The effort needed to connect two crime scenes at [xi, yi] and [xj, yj] is measured by their Manhattan distance: ∣xi−xj∣+∣yi−yj∣ where |val| represents the absolute value of val.
+
+Your task is to determine the minimum total effort required to connect all crime scenes so that every crime scene is part of a single investigative network.
+
+Input Format
+
+The first line contains T, the number of cases the detective is working on.
+The first line of each test case contains n, the number of crime scenes.
+The next n lines provide the 2D coordinates of the crime scenes, where points[i] = [xi, yi].
+Constraints
+
+1 <= T <= 1000
+n == points.length
+1 <= points.length <= 1000
+-10^6 <= xi, yi <= 10^6
+All pairs (xi, yi) may or maynot be distinct.
+Output Format
+
+For each test case, print the minimum effort required to connect all crime scenes.
+
+Sample Input 0
+
+1
+5
+0 0 
+2 2
+3 10
+5 2 
+7 0
+Sample Output 0
+
+20
+Explanation 0
+
+To solve the mystery, the detective connects the crime scenes efficiently, ensuring that all locations are part of a single investigative web. The minimum effort required to achieve this is 20.image
+
+Sample Input 1
+
+1
+3
+3 12
+-2 5
+-4 1
+Sample Output 1
+
+18
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+
+#include <limits>
+using namespace std;
+
+typedef pair<int, int> pii;
+
+int manhattanDistance(const pii &a, const pii &b) {
+    return abs(a.first - b.first) + abs(a.second - b.second);
+}
+
+int minEffortToConnectCrimeScenes(vector<pii> &points) {
+    int n = points.size();
+    vector<bool> inMST(n, false);
+    vector<int> minEdge(n, numeric_limits<int>::max());
+    minEdge[0] = 0; // Start from the first point
+    int totalEffort = 0;
+
+    for (int i = 0; i < n; ++i) {
+        int u = -1;
+        for (int j = 0; j < n; ++j) {
+            if (!inMST[j] && (u == -1 || minEdge[j] < minEdge[u])) {
+                u = j; // Find the vertex with the minimum edge weight
+            }
+        }
+
+        inMST[u] = true; // Include this vertex in MST
+        totalEffort += minEdge[u]; // Add the edge weight to total effort
+
+        // Update the minEdge values for the vertices not yet in MST
+        for (int v = 0; v < n; ++v) {
+            if (!inMST[v]) {
+                int dist = manhattanDistance(points[u], points[v]);
+                minEdge[v] = min(minEdge[v], dist);
+            }
+        }
+    }
+
+    return totalEffort;
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int n;
+        cin >> n;
+        vector<pii> points(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> points[i].first >> points[i].second;
+        }
+        cout << minEffortToConnectCrimeScenes(points) << endl;
+    }
+ 
+    return 0;
+}
