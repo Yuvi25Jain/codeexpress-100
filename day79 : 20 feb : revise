@@ -1,0 +1,129 @@
+Question :
+
+You are organizing a cricket tournament with n teams, numbered from 0 to n - 1. You are given a 2D integer array m matches where matches[i] = [ai, bi] denotes that team ai played against team bi.
+
+A group in the tournament is defined as a set of teams where every team has played against every other team in that group.
+
+Your task is to print the number of complete groups in the tournament.
+
+A complete group is a group where each team has played a match with every other team in the group.
+
+Input Format
+
+The first line contains m (the number of matches) and n (the number of teams).
+The next m lines contain a 2D array matches, where matches[i] = [ui, vi] indicates that team ui played against team vi.
+Constraints
+
+1 <= n <= 50
+0 <= matches.length <= n * (n - 1) / 2
+m == matches.length
+matches[i].length == 2
+0 <= ai, bi <= n - 1
+There are no repeated matches.
+Output Format
+
+Print the number of complete groups in the tournament.
+
+Sample Input 0
+
+4 6
+0 1
+0 2
+1 2
+3 4
+Sample Output 0
+
+3
+Explanation 0
+
+From the picture below, one can see that all of the components of this graph are complete.image
+
+Sample Input 1
+
+5 6
+0 1
+0 2
+1 2
+3 4
+3 5
+Sample Output 1
+
+1
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+  #include <iostream>
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
+void dfs(int team, const vector<vector<bool>>& matchMatrix, unordered_set<int>& visited, unordered_set<int>& group) {
+    visited.insert(team);
+    group.insert(team);
+    for (size_t opponent = 0; opponent < matchMatrix.size(); ++opponent) {
+        if (matchMatrix[team][opponent] && visited.find(opponent) == visited.end()) {
+            dfs(opponent, matchMatrix, visited, group);
+        }
+    }
+}
+
+bool isCompleteGroup(const unordered_set<int>& group, const vector<vector<bool>>& matchMatrix) {
+    size_t size = group.size();
+    for (int team : group) {
+        // Check if the number of matches for this team equals size - 1
+        int matchCount = 0;
+        for (size_t opponent = 0; opponent < matchMatrix.size(); ++opponent) {
+            if (matchMatrix[team][opponent]) {
+                matchCount++;
+            }
+        }
+        if (matchCount != size - 1) {
+            return false; // Not all teams have played against this team
+        }
+    }
+    return true; // All teams in the group have played against each other
+}
+
+int countCompleteGroups(int n, const vector<vector<int>>& matches) {
+    // Create an adjacency matrix
+    vector<vector<bool>> matchMatrix(n, vector<bool>(n, false));
+    
+    // Fill the adjacency matrix
+    for (const auto& match : matches) {
+        matchMatrix[match[0]][match[1]] = true;
+        matchMatrix[match[1]][match[0]] = true;
+    }
+
+    vector<bool> visited(n, false);
+    int completeGroupsCount = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i]) {
+            unordered_set<int> group;
+            dfs(i, matchMatrix, visited, group);
+            if (isCompleteGroup(group, matchMatrix)) {
+                completeGroupsCount++;
+            }
+        }
+    }
+
+    return completeGroupsCount;
+}
+
+int main() {
+    int m, n;
+    cin >> m >> n;
+    vector<vector<int>> matches(m, vector<int>(2));
+    
+    for (int i = 0; i < m; ++i) {
+        cin >> matches[i][0] >> matches[i][1];
+    }
+
+    int result = countCompleteGroups(n, matches);
+    cout << result << endl;
+
+    return 0;
+}
