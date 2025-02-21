@@ -1,0 +1,137 @@
+Question :
+
+Cristiano Ronaldo has started a new rigorous training regime. Before every training session, he always visits his personal trainer at the gym for warm-up exercises before heading to the actual training ground. This happens every single time, no matter where the training session is.
+
+Ronaldo, being a perfectionist, wants to minimize his travel time. However, his routine of visiting the gym before training consumes extra time. Your task is to determine how much time Ronaldo could save if he went directly to the training ground instead of first going to the gym.
+
+The city has N locations numbered from 0 to N-1. Ronaldo's house is at location S, the gym is at location G, and the training ground is at location D. Note that S, G, and D need not be distinct.
+
+           ⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⠂⠀⠀⠀⠀⠀⠀⠀⠀
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀
+
+⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣦⠀
+
+⠀⠀⠀⠀⠀⠀⣴⣿⢿⣷⠒⠲⣾⣾⣿⣿
+
+⠀⠀⠀⠀⣴⣿⠟⠁⠀⢿⣿⠁⣿⣿⣿⠻⣿⣄⠀⠀⠀⠀
+
+⠀⠀⣠⡾⠟⠁⠀⠀⠀⢸⣿⣸⣿⣿⣿⣆⠙⢿⣷⡀⠀⠀
+
+⣰⡿⠋⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⠀⠀⠉⠻⣿⡀
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣆⠂⠀
+
+⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⡿⣿⣿⣿⣿⡄⠀⠀⠀
+
+⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⠿⠟⠀⠀⠻⣿⣿⡇⠀⠀⠀⠀
+
+⠀⠀⠀⠀⠀⠀⢀⣾⡿⠃⠀⠀⠀⠀⠀⠘⢿⣿⡀⠀⠀⠀
+
+⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡀⠀⠀
+
+⠀⠀⠀⠀⢠⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣧⠀⠀
+
+⠀⠀⠀⢀⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣆⠀
+
+⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤⠄
+
+Input Format
+
+The first line of the input contains a single integer N.
+Then follows an N × N matrix T, which is represented in N lines with N space-separated integers on each line.
+T[i][j] denotes the time taken to move from the i-th location to the j-th location. Obviously, T[i][i] = 0.
+The next line contains a single integer M, the number of scenarios.
+The following M lines contain 3 space-separated integers S, G, D.
+Constraints
+
+1 ≤ N ≤ 250
+1 ≤ M ≤ 10000
+0 ≤ T[i][j] ≤ 100000
+0 ≤ S,G,D ≤ N-1
+Output Format
+
+For each of the M scenarios, output the time taken by Ronaldo to reach the training ground following his routine (via the gym) and the time he could have saved if he went directly from his house to the training ground.
+
+Sample Input 0
+
+4  
+0 2 1 3  
+1 0 4 5  
+3 1 0 3  
+1 1 1 0  
+4  
+0 2 1  
+0 2 2  
+3 1 2  
+3 0 1  
+Sample Output 0
+
+2 0  
+1 0  
+3 2  
+3 2  
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <limits>
+using namespace std ;
+
+const int INF = numeric_limits<int>::max();
+
+int main() {
+    int N;
+    cin >> N;
+
+    // Read the travel time matrix
+    vector<vector<int>> T(N, vector<int>(N));
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            cin >> T[i][j];
+        }
+    }
+
+    // Floyd-Warshall algorithm to find shortest paths
+    for (int k = 0; k < N; ++k) {
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < N; ++j) {
+                if (T[i][j] > T[i][k] + T[k][j]) {
+                    T[i][j] = T[i][k] + T[k][j];
+                }
+            }
+        }
+    }
+
+    int M;
+    cin >> M;
+
+    // Process each scenario
+    for (int i = 0; i < M; ++i) {
+        int S, G, D;
+        cin >> S >> G >> D;
+
+        // Time taken via gym
+        int timeViaGym = T[S][G] + T[G][D];
+        // Time taken directly to training ground
+        int timeDirect = T[S][D];
+        // Time saved
+        int timeSaved = timeViaGym - timeDirect;
+
+        cout << timeViaGym << " " << timeSaved << endl;
+    }
+
+ 
+
+   
+    return 0;
+}
