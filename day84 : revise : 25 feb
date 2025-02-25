@@ -1,0 +1,96 @@
+Question :
+
+You have found an ancient golden token with a mysterious number engraved on it. You can swap two digits at most once to maximize its value.
+
+Print the highest possible value of the token.
+
+Input Format
+
+The first line contains T, the number of test cases.
+Each test case contains a single integer representing the token’s number.
+Constraints
+
+0 ≤ T ≤ 1000
+0 ≤ tokenNumber ≤ 10^8
+Output Format
+
+For each test case, print the maximum possible value of the golden token.
+
+Sample Input 0
+
+1
+2736
+Sample Output 0
+
+7236
+Explanation 0
+
+Swapping 2 and 7 gives the highest value.
+
+Sample Input 1
+
+1
+9973
+Sample Output 1
+
+9973
+Explanation 1
+
+The token already has the maximum possible value, so no swap is needed.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T; // Read the number of test cases
+
+    while (T--) {
+        string tokenNumber;
+        cin >> tokenNumber; // Read the token number as a string
+
+        int n = tokenNumber.size();
+        string maxToken = tokenNumber; // Initialize maxToken with the original token number
+
+        // Create an array to store the last occurrence of each digit
+        int last[10] = {-1}; // last[i] will store the last index of digit i
+
+        // Fill the last occurrence array
+        for (int i = 0; i < n; ++i) {
+            last[tokenNumber[i] - '0'] = i;
+        }
+
+        // Try to find the best swap
+        for (int i = 0; i < n; ++i) {
+            // Check for digits greater than the current digit
+            for (int d = 9; d > tokenNumber[i] - '0'; --d) {
+                if (last[d] > i) { // If there's a larger digit after the current digit
+                    // Swap the digits
+                    swap(tokenNumber[i], tokenNumber[last[d]]);
+                    // Update maxToken if the new tokenNumber is greater
+                    if (tokenNumber > maxToken) {
+                        maxToken = tokenNumber;
+                    }
+                    // Swap back to restore the original tokenNumber
+                    swap(tokenNumber[i], tokenNumber[last[d]]);
+                }
+            }
+        }
+
+        cout << maxToken << endl; // Output the maximum token number
+    }
+
+  
+    return 0;
+}
