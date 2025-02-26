@@ -1,0 +1,151 @@
+Question :
+
+
+You are part of a secret spy organization that communicates using special codewords. Your mission is to deliver a message by transforming a starting codeword into a final codeword using a list of approved codewords.
+
+A valid transformation must follow these rules:
+
+Each transformation changes exactly one letter of the current codeword.
+Every intermediate codeword in the sequence must be present in the approved codeword list.
+The final codeword must match the target codeword exactly.
+Your task is to determine the shortest possible transformation sequence from the starting codeword to the target codeword. If no transformation is possible, return 0.
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+Each test case consists of:
+A string beginWord (the starting codeword).
+A string endWord (the target codeword).
+An integer n, the number of words in the approved list.
+A list of n strings, representing the approved codewords.
+Constraints
+
+1≤T≤100
+1≤beginWord.length≤10
+endWord.length=beginWord.length
+1≤n≤5000
+Each word consists of lowercase English letters.
+beginWord ≠ endWord
+All words in the list are unique.
+Output Format
+
+For each test case, print the length of the shortest transformation sequence. If no valid transformation exists, print 0.
+
+Sample Input 0
+
+1
+hit cog
+6
+hot dot dog lot log cog
+Sample Output 0
+
+5
+Explanation 0
+
+One of the shortest transformation sequences is: hit → hot → dot → dog → cog.
+
+The sequence consists of 5 words, so we print 5.
+
+Sample Input 1
+
+1
+hit cog
+5
+hot dot dog lot log
+Sample Output 1
+
+0
+Explanation 1
+
+The word "cog" is not in the list, making it impossible to reach the target. Therefore, the output is 0.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+CODE:
+
+
+
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_set>
+#include <queue>
+#include <string>
+using namespace std;
+
+bool canTransform(const string& word1, const string& word2) {
+    int diffCount = 0;
+    for (size_t i = 0; i < word1.length(); ++i) {
+        if (word1[i] != word2[i]) {
+            diffCount++;
+            if (diffCount > 1) return false; // More than one letter differs
+        }
+    }
+    return diffCount == 1; // Exactly one letter must differ
+}
+
+int ladderLength(string beginWord, string endWord, unordered_set<string>& wordSet) {
+    if (wordSet.find(endWord) == wordSet.end()) return 0; // End word must be in the set
+
+    queue<string> q;
+    q.push(beginWord);
+    int steps = 1; // Start with the first word
+
+    while (!q.empty()) {
+        size_t size = q.size(); // Change size to size_t
+        for (size_t i = 0; i < size; ++i) {
+            string currentWord = q.front();
+            q.pop();
+
+            if (currentWord == endWord) return steps; // Found the end word
+
+            // Try changing each letter
+            for (size_t j = 0; j < currentWord.length(); ++j) {
+                char originalChar = currentWord[j];
+                for (char c = 'a'; c <= 'z'; ++c) {
+                    if (c == originalChar) continue; // Skip the same character
+                    currentWord[j] = c;
+
+                    if (wordSet.find(currentWord) != wordSet.end()) {
+                        q.push(currentWord);
+                        wordSet.erase(currentWord); // Remove to prevent cycles
+                    }
+                }
+                currentWord[j] = originalChar; // Restore original character
+            }
+        }
+        steps++;
+    }
+    return 0; // No transformation found
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        string beginWord, endWord;
+        cin >> beginWord >> endWord;
+        int n;
+        cin >> n;
+
+        unordered_set<string> wordSet;
+        for (int i = 0; i < n; ++i) {
+            string word;
+            cin >> word;
+            wordSet.insert(word);
+        }
+
+        int result = ladderLength(beginWord, endWord, wordSet);
+        cout << result << endl;
+    }
+ 
+ 
+    return 0;
+}
