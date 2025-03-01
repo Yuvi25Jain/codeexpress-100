@@ -1,0 +1,178 @@
+Question:
+
+You are in charge of guiding a group of adventurers through a forest, represented as a binary tree, where each node contains a certain amount of treasure. The root of the tree represents the starting point. Each path in the tree leads to a leaf, which is a point where the adventurers must decide whether to stop or continue.
+
+Given the root of the tree and a target amount of treasure (targetSum), you need to determine if there is a path from the start to any leaf where the total treasure collected equals targetSum. If such a path exists, return true, otherwise return false.
+
+A leaf is a node with no children.
+
+Input Format
+
+The first line contains an integer t — the number of test cases.
+For each test case:
+The first line contains an integer n — the number of nodes in the binary tree.
+The second line contains n space-separated integers representing the values of the nodes in level-order. A value of null represents an absent child node.
+The third line contains an integer targetSum — the target amount of treasure.
+Constraints
+
+The number of nodes in the tree is in the range [0, 5000].
+-1000 ≤ Node.val ≤ 1000
+-1000 ≤ targetSum ≤ 1000
+Output Format
+
+For each test case, return true if there exists a root-to-leaf path such that the sum of the treasures along the path equals targetSum, otherwise return false.
+
+Sample Input 0
+
+1
+5
+5 4 8 11 null 13 4 7 2 null null null 1
+22
+Sample Output 0
+
+true
+Explanation 0
+
+image
+
+There is a path from the root to the leaf 5 -> 4 -> 11 -> 2 that sums to 22, so the answer is true.
+
+Sample Input 1
+
+1
+3
+1 2 3
+5
+Sample Output 1
+
+false
+Explanation 1
+
+image
+
+There are no root-to-leaf paths that sum to 5, so the answer is false.
+
+Sample Input 2
+
+1
+0
+0
+Sample Output 2
+
+false
+Explanation 2
+
+The tree is empty, so there are no root-to-leaf paths. Thus, the answer is false.
+
+Contest ends in 17 days
+Submissions: 36
+Max Score: 1
+Difficulty: Medium
+Rate This Challenge:
+
+    
+More
+ 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <string>
+
+
+using namespace std;
+
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (!root) return targetSum == 0; // If the tree is empty, return false
+        targetSum -= root->val; // Subtract the current node's value from targetSum
+        // If we reach a leaf node, check if the targetSum is 0
+        if (!root->left && !root->right) {
+            return targetSum == 0;
+        }
+        // Recursively check the left and right subtrees
+        return hasPathSum(root->left, targetSum) || hasPathSum(root->right, targetSum);
+    }
+};
+
+// Function to build the binary tree from level-order input
+TreeNode* buildTree(const vector<string>& nodes) {
+    if (nodes.empty() || nodes[0] == "null") return nullptr;
+
+    TreeNode* root = new TreeNode(stoi(nodes[0]));
+    queue<TreeNode*> q;
+    q.push(root);
+    size_t i = 1; // Use size_t for index
+
+    while (!q.empty() && i < nodes.size()) {
+        TreeNode* current = q.front();
+        q.pop();
+
+        // Left child
+        if (i < nodes.size() && nodes[i] != "null") {
+            current->left = new TreeNode(stoi(nodes[i]));
+            q.push(current->left);
+        }
+        i++;
+        
+        // Right child
+        if (i < nodes.size() && nodes[i] != "null") {
+            current->right = new TreeNode(stoi(nodes[i]));
+            q.push(current->right);
+        }
+        i++;
+    }
+    return root;
+}
+
+int main() {
+    int t;
+    cin >> t; // Number of test cases
+    while (t--) {
+        int n;
+        cin >> n; // Number of nodes in the binary tree
+        vector<string> nodes(n);
+        for (int i = 0; i < n; i++) {
+            cin >> nodes[i]; // Read node values
+        }
+        int targetSum;
+        cin >> targetSum; // Read target sum
+
+        // If there are no nodes, directly return false
+        if (n == 0) {
+            cout << "false" << endl;
+            continue;
+        }
+
+        TreeNode* root = buildTree(nodes);
+        Solution solution;
+        bool result = solution.hasPathSum(root, targetSum);
+        cout << (result ? "true" : "false") << endl;
+
+        // Clean up memory (not shown here for brevity)
+    }
+ 
+ 
+   
+    return 0;
+}
