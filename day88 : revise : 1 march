@@ -1,0 +1,135 @@
+Question :
+
+In a mystical land, there exists a Tree of Reflection, which is said to be perfectly symmetric around its center. The great sages of the land have tasked you with determining whether a given tree follows this perfect reflection property.
+
+A tree is symmetric if the left subtree is a mirror reflection of the right subtree. Your task is to determine whether the given tree satisfies this condition.
+
+Input Format
+
+The first line contains an integer t — the number of test cases.
+For each test case:
+The first line contains an integer n — the number of nodes in the binary tree.
+The second line contains n space-separated values representing the tree in level-order traversal.
+A value of "null" represents an absent child node.
+Constraints
+
+1 ≤ n ≤ 1000
+-100 ≤ Node.val ≤ 100
+Output Format
+
+For each test case, print "true" if the tree is symmetric and "false" otherwise.
+
+Sample Input 0
+
+1
+7
+1 2 2 3 4 4 3
+Sample Output 0
+
+true
+Explanation 0
+
+image
+
+The tree is symmetric.
+
+Sample Input 1
+
+1
+7
+1 2 2 null 3 null 3
+Sample Output 1
+
+false
+Explanation 1
+
+image
+
+The tree is not symmetric, as the left subtree does not mirror the right subtree.
+
+
+  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+// Function to check if two trees are mirror images of each other
+bool isMirror(TreeNode* left, TreeNode* right) {
+    if (!left && !right) return true; // Both are null
+    if (!left || !right) return false; // One is null, the other is not
+    return (left->val == right->val) && isMirror(left->right, right->left) && isMirror(left->left, right->right);
+}
+
+// Function to build the tree from level-order input
+TreeNode* buildTree(const vector<string>& nodes) {
+    if (nodes.empty() || nodes[0] == "null") return nullptr;
+
+    TreeNode* root = new TreeNode(stoi(nodes[0]));
+    queue<TreeNode*> q;
+    q.push(root);
+    
+    size_t i = 1; // Change i to size_t
+    while (!q.empty() && i < nodes.size()) {
+        TreeNode* current = q.front();
+        q.pop();
+
+        if (nodes[i] != "null") {
+            current->left = new TreeNode(stoi(nodes[i]));
+            q.push(current->left);
+        }
+        i++;
+        
+        if (i >= nodes.size()) break;
+
+        if (nodes[i] != "null") {
+            current->right = new TreeNode(stoi(nodes[i]));
+            q.push(current->right);
+        }
+        i++;
+    }
+    
+    return root;
+}
+
+int main() {
+    int t;
+    cin >> t; // Number of test cases
+    while (t--) {
+        int n;
+        cin >> n; // Number of nodes
+        vector<string> nodes(n);
+        for (int i = 0; i < n; i++) {
+            cin >> nodes[i]; // Read node values
+        }
+
+        TreeNode* root = buildTree(nodes);
+        // Check if the tree is symmetric
+        bool result = isMirror(root->left, root->right);
+        cout << (result ? "true" : "false") << endl;
+
+        // Clean up memory (optional, but good practice)
+        // You can implement a function to delete the tree if needed
+    }
+ 
+    
+  
+    return 0;
+}
