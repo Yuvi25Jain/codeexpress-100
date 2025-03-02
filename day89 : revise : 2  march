@@ -1,0 +1,133 @@
+Question:
+
+You are given a 0-indexed array of n integers representing the lamp post IDs placed in a straight line on a city street.
+
+The distance between two lamp posts is defined as the absolute difference between their positions. More formally, the distance between a lamp post at position i and another at position j is |i - j|, but only if they have the same ID (indicating they are of the same model/type).
+
+Your task is to determine, for each lamp post, the sum of distances between it and all other lamp posts that have the same ID.
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+The first line of each test case contains an integer n, the number of lamp posts.
+The second line of each test case contains n space-separated integers representing the IDs of the lamp posts in their respective positions along the street.
+Constraints
+
+1 ≤ T ≤ 1000
+n == arr.length
+1 ≤ n ≤ 10⁵
+1 ≤ arr[i] ≤ 10⁵
+Output Format
+
+For each test case, print an array of length n, where the i-th value represents the sum of distances between the lamp post at position i and all other lamp posts that have the same ID.
+
+Sample Input 0
+
+1
+7
+2 1 3 1 2 3 3
+Sample Output 0
+
+4 2 7 2 4 4 5
+Explanation 0
+
+Lamp post at index 0 (ID: 2) → Another 2 is found at index 4 → |0 - 4| = 4
+Lamp post at index 1 (ID: 1) → Another 1 is found at index 3 → |1 - 3| = 2
+Lamp post at index 2 (ID: 3) → Two more 3s at indices 5, 6 → |2 - 5| + |2 - 6| = 7
+Lamp post at index 3 (ID: 1) → Another 1 at index 1 → |3 - 1| = 2
+Lamp post at index 4 (ID: 2) → Another 2 at index 0 → |4 - 0| = 4
+Lamp post at index 5 (ID: 3) → Two more 3s at indices 2, 6 → |5 - 2| + |5 - 6| = 4
+Lamp post at index 6 (ID: 3) → Two more 3s at indices 2, 5 → |6 - 2| + |6 - 5| = 5
+Sample Input 1
+
+1
+4
+10 5 10 10
+Sample Output 1
+
+5 0 3 4
+Explanation 1
+
+Lamp post at index 0 (ID: 10) → Two more 10s at indices 2, 3 → |0 - 2| + |0 - 3| = 5
+Lamp post at index 1 (ID: 5) → No other 5s → 0
+Lamp post at index 2 (ID: 10) → Two more 10s at indices 0, 3 → |2 - 0| + |2 - 3| = 3
+Lamp post at index 3 (ID: 10) → Two more 10s at indices 0, 2 → |3 - 0| + |3 - 2| = 4
+Contest ends in 15 days
+Submissions: 16
+Max Score: 1
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+
+using namespace std;
+
+
+void calculateDistances(int n, const vector<int>& arr, vector<int>& result) {
+    unordered_map<int, vector<int>> positions;
+
+    // Step 1: Store positions of each lamp post ID
+    for (int i = 0; i < n; ++i) {
+        positions[arr[i]].push_back(i);
+    }
+
+    // Step 2: Calculate distances for each ID
+    for (const auto& entry : positions) {
+        const vector<int>& pos = entry.second;
+        int size = pos.size();
+        
+        // Prefix sums to calculate distances
+        vector<long long> prefixSum(size);
+        prefixSum[0] = pos[0];
+        for (int i = 1; i < size; ++i) {
+            prefixSum[i] = prefixSum[i - 1] + pos[i];
+        }
+
+        // Calculate distances for each position
+        for (int i = 0; i < size; ++i) {
+            int currentIndex = pos[i];
+            long long leftSum = (i > 0) ? prefixSum[i - 1] : 0;
+            long long rightSum = prefixSum[size - 1] - prefixSum[i];
+
+            // Distance to the left
+            long long leftDistance = (long long)i * currentIndex - leftSum;
+            // Distance to the right
+            long long rightDistance = rightSum - (long long)(size - i - 1) * currentIndex;
+
+            result[currentIndex] = leftDistance + rightDistance;
+        }
+    }
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int n;
+        cin >> n;
+        vector<int> arr(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> arr[i];
+        }
+        
+        vector<int> result(n, 0);
+        calculateDistances(n, arr, result);
+        
+        for (int i = 0; i < n; ++i) {
+            cout << result[i] << " ";
+        }
+        cout << endl;
+    }
+  
+    return 0;
+}
