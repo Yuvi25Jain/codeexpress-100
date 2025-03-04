@@ -1,0 +1,98 @@
+Question :
+
+In a faraway land of numbers, a wizard challenges you with a magical number C. He asks you to determine whether C can be formed by the sum of squares of two whole numbers a and b.
+
+Your task is to help solve the wizard’s puzzle. If there exist two integers a and b such that: a^2 + b^2 = c
+
+Print "yes", otherwise print "no".
+
+Input Format
+
+The first line contains T, the number of test cases.
+The next T lines contain a single integer C.
+Constraints
+
+1 <= T <= 1000
+0 <= c <= 2^31-1
+Output Format
+
+For each testcase, print "yes" if there're two integers a and b such that a2 + b2 = c or "no" otherwise.
+
+Sample Input 0
+
+1
+5
+Sample Output 0
+
+yes
+Explanation 0
+
+1 * 1 + 2 * 2 = 5
+
+Sample Input 1
+
+1
+3
+Sample Output 1
+
+no
+Explanation 1
+
+There are no two integers whose squares add up to 3.
+
+Contest ends in 14 days
+Submissions: 35
+Max Score: 1
+Difficulty: Medium
+Rate This Challenge:
+
+    
+More
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+bool canBeExpressedAsSumOfSquares(int c) {
+    int a = 0;
+    int b = static_cast<int>(sqrt(c)); // Start b at the largest possible value
+
+    while (a <= b) {
+        int sumOfSquares = a * a + b * b;
+        if (sumOfSquares == c) {
+            return true; // Found a valid pair (a, b)
+        } else if (sumOfSquares < c) {
+            a++; // Increase a to get a larger sum
+        } else {
+            b--; // Decrease b to get a smaller sum
+        }
+    }
+    return false; // No valid pair found
+}
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+    while (T--) {
+        int C;
+        cin >> C; // Read each test case value
+        if (canBeExpressedAsSumOfSquares(C)) {
+            cout << "yes" << endl; // Output "yes" if valid pair found
+        } else {
+            cout << "no" << endl; // Output "no" if no valid pair found
+        }
+    }
+ 
+    return 0;
+}
+
+  
