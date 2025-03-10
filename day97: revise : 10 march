@@ -1,0 +1,86 @@
+Question:
+
+You are given N items, each with a weight and a value, and a knapsack that can carry up to W weight units.
+
+Your task is to determine the maximum total value you can obtain by selecting a subset of items such that the total weight does not exceed W.
+
+Each item can be either included or excluded (0/1 property).
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+For each test case:
+The first line contains two integers N (number of items) and W (maximum weight the knapsack can carry).
+The next N lines each contain two integers:
+value[i] → value of the i-th item
+weight[i] → weight of the i-th item
+Constraints
+
+1≤T≤100 1≤N≤1000 1≤W≤10^4 1≤ value[i], weight[i]≤1000
+
+Output Format
+
+For each test case, print a single integer — the maximum value that can be obtained without exceeding the weight limit.
+
+Sample Input 0
+
+1
+3 50
+60 10
+100 20
+120 30
+Sample Output 0
+
+220
+Explanation 0
+
+Select items 2 and 3 → Total weight 20 + 30 = 50, Total value 100 + 120 = 220.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+
+    while (T--) {
+        int N, W;
+        cin >> N >> W; // Read number of items and maximum weight
+
+        vector<int> value(N);
+        vector<int> weight(N);
+
+        for (int i = 0; i < N; i++) {
+            cin >> value[i] >> weight[i]; // Read value and weight of each item
+        }
+
+        // Create a DP array to store the maximum value for each weight
+        vector<int> dp(W + 1, 0);
+
+        // Process each item
+        for (int i = 0; i < N; i++) {
+            // Traverse the dp array backwards
+            for (int j = W; j >= weight[i]; j--) {
+                dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
+            }
+        }
+
+        // The maximum value for the full capacity W will be in dp[W]
+        cout << dp[W] << endl;
+    }
+
+ 
+    return 0;
+}
