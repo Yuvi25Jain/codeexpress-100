@@ -1,0 +1,83 @@
+Question :
+
+Imagine a mouse is trapped in a maze that is structured as an m x n grid. The mouse starts at the top-left corner of the maze (i.e., grid[0][0]) and wants to reach the bottom-right corner (i.e., grid[m - 1][n - 1]).
+
+The mouse can only move right or down at any step.
+
+Given the two integers m and n, print the number of unique paths the mouse can take to successfully escape the maze and reach its destination.
+
+The test cases are designed so that the answer will be ≤ 2 * 10⁹.
+
+Input Format
+
+The first line contains T, the number of test cases.
+Each test case consists of two integers: m and n, representing the grid's dimensions.
+Constraints
+
+1 <= T <= 1000
+1 <= m,n <= 100
+Output Format
+
+For each test case, print a single integer representing the number of unique paths the mouse can take to reach the exit.
+
+Sample Input 0
+
+1
+3 7
+Sample Output 0
+
+28
+Sample Input 1
+
+1
+3 2
+Sample Output 1
+
+3
+Explanation 1
+
+In a 3x2 maze, the mouse has 3 possible ways to escape:
+
+Move Right → Down → Down
+Move Down → Down → Right
+Move Down → Right → Down
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+// Function to calculate unique paths using combinatorial approach
+long long uniquePaths(int m, int n) {
+    // We need to calculate C(m+n-2, m-1) or C(m+n-2, n-1)
+    long long paths = 1;
+    int totalMoves = m + n - 2; // Total moves
+    int downMoves = m - 1; // Down moves
+
+    // Calculate the result using a single loop to avoid large factorials
+    for (int i = 0; i < downMoves; ++i) {
+        paths = paths * (totalMoves - i) / (i + 1);
+    }
+    
+    return paths;
+}
+
+int main() {
+    int T;
+    cin >> T; // Number of test cases
+    while (T--) {
+        int m, n;
+        cin >> m >> n; // Dimensions of the grid
+        cout << uniquePaths(m, n) << endl; // Output the number of unique paths
+    }
+ 
+    return 0;
+}
