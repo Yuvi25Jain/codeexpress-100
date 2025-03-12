@@ -1,0 +1,141 @@
+Question :
+
+
+ou have discovered an ancient scroll containing a long sequence of encrypted words written as a single string S. Fortunately, you have access to an ancient dictionary containing valid words.
+
+Your task is to decrypt the scroll by adding spaces to reconstruct all possible valid sentences, where each word appears in the dictionary.
+
+A dictionary word can be used multiple times in the segmentation. If no valid segmentation exists, return an empty list.
+
+Input Format
+
+The first line contains an integer T, the number of test cases.
+The second line contains a string S, the encrypted scroll text.
+The third line contains an integer N, the number of words in the dictionary.
+The fourth line contains N space-separated strings, representing the dictionary words.
+Constraints
+
+1≤∣S∣≤20 1≤N≤1000 1≤∣wordDict[i]∣≤10 S and dictionary words consist of only lowercase English letters. All dictionary words are unique. The length of the answer will not exceed 10^5 characters.
+
+Output Format
+
+For each test case, print all possible valid sentences in any order. If no valid sentence exists, print an empty line.
+
+Sample Input 0
+
+1  
+catsanddog  
+5  
+cat cats and sand dog
+Sample Output 0
+
+cat sand dog
+cats and dog  
+Explanation 0
+
+The encrypted scroll "catsanddog" can be decrypted in two ways:
+
+"cat sand dog"
+
+"cats and dog"
+
+Both are valid sentences using words from the dictionary.
+
+Contest ends in 2 days
+Submissions: 23
+Max Score: 1
+Difficulty: Medium
+Rate This Challenge:
+
+    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_set>
+#include <string>
+#include <unordered_map>
+using namespace std;
+
+
+class Solution {
+public:
+    vector<string> wordBreak(string s, unordered_set<string>& wordDict) {
+        unordered_map<int, vector<string>> memo;
+        return backtrack(s, 0, wordDict, memo);
+    }
+
+private:
+    vector<string> backtrack(const string& s, size_t start, unordered_set<string>& wordDict, unordered_map<int, vector<string>>& memo) {
+        // If we reach the end of the string, return a vector with an empty string
+        if (start == s.size()) {
+            return {""};
+        }
+        
+        // If we have already computed the results for this start index, return them
+        if (memo.find(start) != memo.end()) {
+            return memo[start];
+        }
+        
+        vector<string> result;
+        
+        // Try every possible end index for the current word
+        for (size_t end = start + 1; end <= s.size(); ++end) {
+            string word = s.substr(start, end - start);
+            if (wordDict.find(word) != wordDict.end()) {
+                // If the word is in the dictionary, recursively find the rest of the sentence
+                vector<string> subSentences = backtrack(s, end, wordDict, memo);
+                for (const string& sub : subSentences) {
+                    // If sub is not empty, add a space before it
+                    result.push_back(word + (sub.empty() ? "" : " ") + sub);
+                }
+            }
+        }
+        
+        // Store the result in the memoization map
+        memo[start] = result;
+        return result;
+    }
+};
+
+int main() {
+    int T;
+    cin >> T; // Read number of test cases
+    while (T--) {
+        string S;
+        cin >> S; // Read the encrypted scroll text
+        int N;
+        cin >> N; // Read number of words in the dictionary
+        unordered_set<string> wordDict;
+        
+        for (int i = 0; i < N; ++i) {
+            string word;
+            cin >> word; // Read each word into the dictionary
+            wordDict.insert(word);
+        }
+        
+        Solution solution;
+        vector<string> sentences = solution.wordBreak(S, wordDict);
+        
+        // Print all valid sentences
+        if (sentences.empty()) {
+            cout << endl; // Print an empty line if no valid sentences
+        } else {
+            for (const string& sentence : sentences) {
+                cout << sentence << endl;
+            }
+        }
+    }
+    
+ 
+    
+  
+    return 0;
+}
