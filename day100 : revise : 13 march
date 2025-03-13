@@ -1,0 +1,142 @@
+Question :
+
+Two adventurers are on a treasure hunt, competing to collect gold coins hidden in a dungeon. They take turns picking coin bags numbered from 1 to maxCoinBag from a common stash — but once a bag is taken, it cannot be chosen again.
+
+Each bag has a unique number representing its gold value.
+
+The goal is to reach or exceed a target treasure amount. The adventurer who first reaches or exceeds this target wins the hunt and claims the treasure chest!
+
+Both adventurers play smartly and optimally — they will make the best possible move on each turn to maximize their chances of winning.
+
+Your task is to determine whether the first adventurer can guarantee a win if both play perfectly.
+
+Input Format
+
+The first line contains an integer T — the number of test cases.
+Each test case consists of two space-separated integers:
+maxCoinBag — the maximum number on a coin bag available (from 1 to maxCoinBag).
+targetTreasure — the total gold value needed to win.
+Constraints
+
+1 ≤ T ≤ 1000
+1 ≤ maxCoinBag ≤ 20
+0 ≤ targetTreasure ≤ 300
+Output Format
+
+For each test case, print "yes" if the first adventurer can guarantee a win, otherwise print "no".
+
+Sample Input 0
+
+1
+10 11
+Sample Output 0
+
+no
+Explanation 0
+
+No matter which bag the first adventurer grabs, the second adventurer can always respond cleverly and win the treasure hunt by reaching the target first.
+
+Sample Input 1
+
+1
+10 0
+Sample Output 1
+
+yes
+Explanation 1
+
+If the target treasure is 0, the first adventurer wins immediately without even lifting a bag.
+
+Sample Input 2
+
+1
+10 1
+Sample Output 2
+
+yes
+Explanation 2
+
+The first adventurer can pick any bag ≥ 1 and immediately win the treasure hunt.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CODE:
+
+
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+bool canFirstAdventurerWin(int maxCoinBag, int targetTreasure) {
+    const int MAX_SCORE = 300;
+    const int MAX_BAGS = 20;
+    bool dp[MAX_SCORE + 1][1 << MAX_BAGS];
+
+    // Initialize the DP table
+    memset(dp, false, sizeof(dp));
+
+    // Base case: If the score is already >= targetTreasure, first adventurer wins
+    for (int score = 0; score <= MAX_SCORE; ++score) {
+        dp[score][0] = (score >= targetTreasure);
+    }
+
+    // Iterate over all possible scores
+    for (int score = 0; score <= MAX_SCORE; ++score) {
+        for (int mask = 0; mask < (1 << maxCoinBag); ++mask) {
+            // If the current state is already winning, continue
+            if (dp[score][mask]) continue;
+
+            // Try taking each bag
+            for (int bag = 1; bag <= maxCoinBag; ++bag) {
+                if (mask & (1 << (bag - 1))) continue; // Bag already taken
+
+                int newScore = score + bag;
+                int newMask = mask | (1 << (bag - 1));
+
+                // If taking this bag leads to a win
+                if (newScore >= targetTreasure) {
+                    dp[score][mask] = true;
+                    break;
+                }
+
+                // Check if the second adventurer can win from the new state
+                bool secondCanWin = false;
+                for (int nextBag = 1; nextBag <= maxCoinBag; ++nextBag) {
+                    if (newMask & (1 << (nextBag - 1))) continue; // Bag already taken
+
+                    int nextScore = newScore + nextBag;
+                    if (nextScore >= targetTreasure) {
+                        secondCanWin = true; // Second adventurer can win
+                        break;
+                    }
+                }
+
+                // If the second adventurer cannot win, then the first adventurer can guarantee a win
+                if (!secondCanWin) {
+                    dp[score][mask] = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return dp[0][0]; // Check if the first adventurer can guarantee a win from the start
+}
+
+int main() {
+    int T;
+    cin >> T;
+    while (T--) {
+        int maxCoinBag, targetTreasure;
+        cin >> maxCoinBag >> targetTreasure;
+        if (canFirstAdventurerWin(maxCoinBag, targetTreasure)) {
+            cout << "yes" << endl;
+        } else {
+            cout << "no" << endl;
+        }
+    }
+    return 0;
+}
